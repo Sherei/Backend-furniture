@@ -1,11 +1,11 @@
 let myExpress = require('express');
 let cors = require('cors')
+app.use(cors())
 
 let app = myExpress();
 
 
 app.use(myExpress.json())
-app.use(cors())
 
 app.listen(3010, function () {
     console.log("server chla pra")
