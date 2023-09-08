@@ -8,7 +8,7 @@ app.use(myExpress.json())
 app.use(cors())
 
 app.listen(3010, function () {
-    console.log("server chl pra")
+    console.log("server chla pra")
 })
 
 let multer = require('multer')
