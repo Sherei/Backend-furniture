@@ -1,8 +1,15 @@
 let myExpress = require('express');
+
 let cors = require('cors')
-app.use(cors())
 
 let app = myExpress();
+
+const corsOptions = {
+  origin: 'https://me-furniture.vercel.app',
+  optionsSuccessStatus: 204, 
+};
+
+app.use(cors(corsOptions)); 
 
 
 app.use(myExpress.json())
