@@ -11,7 +11,6 @@ const app = myExpress();
 const cloudinary = require('cloudinary').v2;
 
 const corsOptions = {
-    origin: '*',
     optionsSuccessStatus: 204,
 };
 
@@ -21,9 +20,13 @@ app.use(cors(corsOptions));
 app.use(myExpress.json())
 
 cloudinary.config({
+
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+
     api_key: process.env.CLOUDINARY_API_KEY,
+
     api_secret: process.env.CLOUDINARY_API_SECRET,
+
 });
 
 const port = process.env.PORT || 3010;
@@ -157,9 +160,9 @@ app.post('/signUp', async (req, res) => {
 app.post('/login', async (req, res) => {
 
     try {
-        
+
         const user = await SignupUsers.findOne({ email: req.body.email, password: req.body.password })
-        
+
         if (!user) {
             return res.status(404).json({ message: "Invalid credentials" });
         }
@@ -176,7 +179,7 @@ app.post('/login', async (req, res) => {
             res.status(404).json({ message: "Invalid credentials" })
 
         }
-        
+
     } catch (e) {
         console.log(e);
         res.status(500).send("Internal Server Error");
