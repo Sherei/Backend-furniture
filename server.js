@@ -3,41 +3,27 @@ let myExpress = require('express');
 let cors = require('cors')
 
 let app = myExpress();
+const cloudinary = require('cloudinary').v2;
 
 const corsOptions = {
-  origin: 'https://me-furniture.vercel.app',
-  optionsSuccessStatus: 204, 
+    origin: '*',
+    optionsSuccessStatus: 204,
 };
 
-app.use(cors(corsOptions)); 
+app.use(cors(corsOptions));
 
 
 app.use(myExpress.json())
 
+cloudinary.config({
+    cloud_name: 'drouq9iz2',
+    api_key: '174878427379428',
+    api_secret: 'D9clvP6G0U5RpfmQRNViGNEddHY',
+});
+
 app.listen(3010, function () {
     console.log("server chla pra")
 })
-
-let multer = require('multer')
-let fs = require('fs')
-
-app.use(myExpress.static('./server/build'))
-app.use(myExpress.static('./server/pics'))
-
-const productPics = multer.diskStorage({
-    destination: function (req, file, cb) {
-        let path = './server/pics/';
-
-        fs.mkdir(path, function () {
-            cb(null, path);
-        });
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
-    }
-});
-
-const productUpload = multer({ storage: productPics });
 
 require("./model/db")
 
@@ -48,6 +34,75 @@ let Product = require('./model/product')
 let Comment = require('./model/comments')
 
 let token = require('jsonwebtoken');
+
+
+app.post('/product', async (req, res) => {
+    try {
+        const imageUrls = await Promise.all(
+            req.files.map(async (file) => {
+                const result = await cloudinary.uploader.upload(file.path);
+                return result.secure_url;
+            })
+        );
+
+        req.body.images = imageUrls;
+
+        let existingProduct = await Product.findOne({ sn: req.body.sn });
+
+        if (existingProduct) {
+            return res.status(400).send('Try with a different Serial Number');
+        } else {
+            let newProduct = new Product(req.body);
+            await newProduct.save();
+            res.send('Product Added');
+        }
+    } catch (e) {
+        console.log(e);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.get('/product', async (req, res) => {
+
+    try {
+
+        let newProduct = await Product.find().sort({ _id: -1 })
+        res.json(newProduct)
+
+    } catch (e) {
+        console.log(e)
+
+    }
+})
+
+app.get('/singleProduct', async (req, res) => {
+
+    try {
+
+        let singleProduct = await Product.findById(req.query.id)
+        res.json(singleProduct)
+
+    } catch (e) {
+        res.end(e)
+    }
+})
+
+app.delete('/deleteProduct', async function (req, res) {
+
+    try {
+
+        await Product.findByIdAndDelete(req.query.id)
+
+        fs.rmSync('./server/pics/', { recursive: true, force: true })
+
+        res.end("Delete ho gya")
+    } catch (e) {
+        res.send(e)
+    }
+
+})
+
+
 
 
 app.post('/session-check', async (req, res) => {
@@ -104,30 +159,6 @@ app.post('/login', async (req, res) => {
     }
 })
 
-
-app.post("/product", productUpload.array("images", 6), async (req, res) => {
-    try {
-        req.body.images = req.files.map((file) => "/" + file.originalname);
-
-        let existingProduct = await Product.findOne({ sn: req.body.sn });
-
-        if (existingProduct) {
-            return res.status(400).send("Try with different Serial Number");
-        } else if (!existingProduct) {
-
-            let newProduct = new Product(req.body)
-
-            await newProduct.save()
-
-            res.send("Product Added");
-        }
-
-    } catch (e) {
-        console.log(e)
-        res.status(500).send("Internal Server Error");
-    }
-})
-
 app.get('/Users', async (req, res) => {
 
     try {
@@ -139,45 +170,6 @@ app.get('/Users', async (req, res) => {
         console.log(e)
 
     }
-})
-app.get('/product', async (req, res) => {
-
-    try {
-
-        let newProduct = await Product.find().sort({ _id: -1 })
-        res.json(newProduct)
-
-    } catch (e) {
-        console.log(e)
-
-    }
-})
-
-app.get('/singleProduct', async (req, res) => {
-
-    try {
-
-        let singleProduct = await Product.findById(req.query.id)
-        res.json(singleProduct)
-
-    } catch (e) {
-        res.end(e)
-    }
-})
-
-app.delete('/deleteProduct', async function (req, res) {
-
-    try {
-
-        await Product.findByIdAndDelete(req.query.id)
-
-        fs.rmSync('./server/pics/', { recursive: true, force: true })
-
-        res.end("Delete ho gya")
-    } catch (e) {
-        res.send(e)
-    }
-
 })
 app.delete('/deleteUser', async function (req, res) {
 
@@ -193,11 +185,13 @@ app.delete('/deleteUser', async function (req, res) {
 })
 
 
+
+
 app.post('/comments', async (req, res) => {
     try {
         const newComment = new Comment(req.body);
         await newComment.save();
-        res.send("Comment Added");    
+        res.send("Comment Added");
     } catch (e) {
         console.error(e);
         res.status(500).send("Internal Server Error");
@@ -229,13 +223,13 @@ app.delete('/deleteComment', async function (req, res) {
 
 })
 
-app.get("/dashboard", async function(req,res){
-    try{
-        const Users=await SignupUsers.find()
-        const Products=await Product.find()
-        const comments=await Comment.find()
-        res.json({Users, Products, comments})
-    }catch(e){
+app.get("/dashboard", async function (req, res) {
+    try {
+        const Users = await SignupUsers.find()
+        const Products = await Product.find()
+        const comments = await Comment.find()
+        res.json({ Users, Products, comments })
+    } catch (e) {
         res.send(e)
     }
 })
