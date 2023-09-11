@@ -19,9 +19,9 @@ app.use(cors(corsOptions));
 app.use(myExpress.json())
 
 cloudinary.config({
-    cloud_name: 'drouq9iz2',
-    api_key: '174878427379428',
-    api_secret: 'D9clvP6G0U5RpfmQRNViGNEddHY',
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 const port = process.env.PORT || 3010;
