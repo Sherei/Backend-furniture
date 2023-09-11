@@ -2,7 +2,10 @@ let myExpress = require('express');
 
 let cors = require('cors')
 
+require('dotenv').config();
+
 let app = myExpress();
+
 const cloudinary = require('cloudinary').v2;
 
 const corsOptions = {
@@ -21,8 +24,10 @@ cloudinary.config({
     api_secret: 'D9clvP6G0U5RpfmQRNViGNEddHY',
 });
 
-app.listen(3010, function () {
-    console.log("server chla pra")
+const port = process.env.PORT || 3010;
+
+app.listen(port, function () {
+    console.log(`Server is running on port ${port}`)
 })
 
 require("./model/db")

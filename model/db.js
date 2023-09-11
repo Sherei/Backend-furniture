@@ -1,7 +1,7 @@
 let mongoose = require('mongoose');
 
 try {
-    let connect = mongoose.connect("mongodb+srv://sharjeel:Sharjeel3322@cluster0.zvd5ct1.mongodb.net/")
+    let connect = mongoose.connect(process.env.MONGODB_URI);
     console.log(connect)
 } catch (e) {
     console.log(e)
