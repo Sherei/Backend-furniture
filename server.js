@@ -94,6 +94,7 @@ app.get('/singleProduct', async (req, res) => {
     }
 })
 
+
 app.delete('/deleteProduct', async function (req, res) {
 
     try {
