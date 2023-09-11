@@ -45,15 +45,13 @@ const token = require('jsonwebtoken');
 
 app.post('/product', async (req, res) => {
     try {
-        const imageUrls = await Promise.all(
+        req.body.images = await Promise.all(
             req.files.map(async (file) => {
                 const result = await cloudinary.uploader.upload(file.path);
                 return result.secure_url;
             })
         );
-
-        req.body.images = imageUrls;
-
+        
         const existingProduct = await Product.findOne({ sn: req.body.sn });
 
         if (existingProduct) {
@@ -186,6 +184,7 @@ app.get('/Users', async (req, res) => {
 
     }
 })
+
 app.delete('/deleteUser', async function (req, res) {
 
     try {
@@ -198,8 +197,6 @@ app.delete('/deleteUser', async function (req, res) {
     }
 
 })
-
-
 
 
 app.post('/comments', async (req, res) => {
