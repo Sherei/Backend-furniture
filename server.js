@@ -51,7 +51,7 @@ app.post('/product', async (req, res) => {
                 return result.secure_url;
             })
         );
-        
+
         const existingProduct = await Product.findOne({ sn: req.body.sn });
 
         if (existingProduct) {
@@ -126,9 +126,9 @@ app.post('/session-check', async (req, res) => {
 app.post('/signUp', async (req, res) => {
     try {
         const existingUser = await SignupUsers.findOne({ email: req.body.email });
-        
+
         if (existingUser) {
-            
+
             return res.status(400).send("User with this email already exists");
         }
 
@@ -157,15 +157,26 @@ app.post('/signUp', async (req, res) => {
 app.post('/login', async (req, res) => {
 
     try {
+        
         const user = await SignupUsers.findOne({ email: req.body.email, password: req.body.password })
-        if (user) {
+        
+        if (!user) {
+            return res.status(404).json({ message: "Invalid credentials" });
+        }
+        const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
+
+        if (isPasswordValid) {
+
             token.sign({ tokenId: user._id }, "My user", { expiresIn: "1y" }, async (err, myToken) => {
-                res.json({ user, myToken })
-            })
-        } else {
+                res.json({ user, myToken });
+            });
+        }
+
+        else {
             res.status(404).json({ message: "Invalid credentials" })
 
         }
+        
     } catch (e) {
         console.log(e);
         res.status(500).send("Internal Server Error");
