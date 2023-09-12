@@ -11,6 +11,7 @@ const app = myExpress();
 const cloudinary = require('cloudinary').v2;
 
 const corsOptions = {
+    origin:"*",
     optionsSuccessStatus: 204,
 };
 
