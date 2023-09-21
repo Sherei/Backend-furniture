@@ -50,14 +50,16 @@ const token = require('jsonwebtoken');
 
 app.post('/product', async (req, res) => {
     try {
+
         const cloudinaryUrls = [];
 
-        for (const fieldName in req.files) {
-            const file = req.files[fieldName];
-
-            const result = await cloudinary.uploader.upload(file.tempFilePath);
-
-            cloudinaryUrls.push(result.secure_url);
+        for (const file of req.files.images) {
+            try {
+                const result = await cloudinary.uploader.upload(file.tempFilePath);
+                cloudinaryUrls.push(result.secure_url);
+            } catch (error) {
+                console.error('Error uploading file:', error);
+            }
         }
 
         const existingProduct = await Product.findOne({ sn: req.body.sn });
@@ -72,7 +74,7 @@ app.post('/product', async (req, res) => {
         });
 
         await newProduct.save();
-        res.send({ message: 'Product Added' }); 
+        res.send({ message: 'Product Added' });
 
     } catch (e) {
         console.log(e);
@@ -84,10 +86,8 @@ app.post('/product', async (req, res) => {
 app.get('/product', async (req, res) => {
 
     try {
-
         const newProduct = await Product.find().sort({ _id: -1 })
         res.json(newProduct)
-
     } catch (e) {
         console.log(e)
 
