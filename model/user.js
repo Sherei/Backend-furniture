@@ -7,7 +7,7 @@ let userSchema= mongoose.Schema({
         unique:true,
     },
     password:String,
-    cpassword:String,
+    cpassword:String,   
    
     number:Number,
     date:{

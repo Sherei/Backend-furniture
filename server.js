@@ -1,24 +1,24 @@
 const myExpress = require('express');
+const app = myExpress();
+
+app.use(myExpress.json())
 
 const cors = require('cors')
 
 require('dotenv').config();
 
-const bcrypt = require('bcrypt');
-
-const app = myExpress();
+const fileUpload = require('express-fileupload')
+app.use(fileUpload({
+    useTempFiles: true
+}))
 
 const cloudinary = require('cloudinary').v2;
 
 const corsOptions = {
-    origin:"*",
+    origin: "*",
     optionsSuccessStatus: 204,
 };
-
 app.use(cors(corsOptions));
-
-
-app.use(myExpress.json())
 
 cloudinary.config({
 
@@ -49,27 +49,36 @@ const token = require('jsonwebtoken');
 
 app.post('/product', async (req, res) => {
     try {
-        req.body.images = await Promise.all(
-            req.files.map(async (file) => {
-                const result = await cloudinary.uploader.upload(file.path);
-                return result.secure_url;
-            })
-        );
+        const cloudinaryUrls = [];
+
+        for (const fieldName in req.files) {
+            const file = req.files[fieldName];
+
+            const result = await cloudinary.uploader.upload(file.tempFilePath);
+
+            cloudinaryUrls.push(result.secure_url);
+        }
 
         const existingProduct = await Product.findOne({ sn: req.body.sn });
 
         if (existingProduct) {
             return res.status(400).send('Try with a different Serial Number');
-        } else {
-            const newProduct = new Product(req.body);
-            await newProduct.save();
-            res.send('Product Added');
         }
+
+        const newProduct = new Product({
+            ...req.body,
+            images: cloudinaryUrls,
+        });
+
+        await newProduct.save();
+        res.send({ message: 'Product Added' }); 
+
     } catch (e) {
         console.log(e);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 app.get('/product', async (req, res) => {
 
@@ -83,36 +92,6 @@ app.get('/product', async (req, res) => {
 
     }
 })
-
-app.get('/singleProduct', async (req, res) => {
-
-    try {
-
-        const singleProduct = await Product.findById(req.query.id)
-        res.json(singleProduct)
-
-    } catch (e) {
-        res.end(e)
-    }
-})
-
-
-app.delete('/deleteProduct', async function (req, res) {
-
-    try {
-
-        await Product.findByIdAndDelete(req.query.id)
-
-        fs.rmSync('./server/pics/', { recursive: true, force: true })
-
-        res.end("Delete ho gya")
-    } catch (e) {
-        res.send(e)
-    }
-
-})
-
-
 
 
 app.post('/session-check', async (req, res) => {
@@ -138,9 +117,9 @@ app.post('/signUp', async (req, res) => {
 
         if (req.body.password === req.body.cpassword) {
 
-            req.body.password = await bcrypt.hash(password, 10);
+            // req.body.password = await bcrypt.hash(req.body.password, 10);
 
-            req.body.cpassword = await bcrypt.hash(cpassword, 10);
+            // req.body.cpassword = await bcrypt.hash(req.body.cpassword, 10);
 
             const newUser = new SignupUsers(req.body);
 
@@ -167,18 +146,13 @@ app.post('/login', async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "Invalid credentials" });
         }
-        const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
-
-        if (isPasswordValid) {
-
+        else if (user) {
             token.sign({ tokenId: user._id }, "My user", { expiresIn: "1y" }, async (err, myToken) => {
                 res.json({ user, myToken });
             });
         }
-
         else {
             res.status(404).json({ message: "Invalid credentials" })
-
         }
 
     } catch (e) {
@@ -212,6 +186,39 @@ app.delete('/deleteUser', async function (req, res) {
     }
 
 })
+
+
+
+
+app.get('/singleProduct', async (req, res) => {
+
+    try {
+
+        const singleProduct = await Product.findById(req.query.id)
+        res.json(singleProduct)
+
+    } catch (e) {
+        res.end(e)
+    }
+})
+
+
+app.delete('/deleteProduct', async function (req, res) {
+
+    try {
+
+        await Product.findByIdAndDelete(req.query.id)
+
+        fs.rmSync('./server/pics/', { recursive: true, force: true })
+
+        res.end("Delete ho gya")
+    } catch (e) {
+        res.send(e)
+    }
+
+})
+
+
 
 
 app.post('/comments', async (req, res) => {
