@@ -48,53 +48,6 @@ const Comment = require('./model/comments')
 const token = require('jsonwebtoken');
 
 
-app.post('/product', async (req, res) => {
-    try {
-
-        const cloudinaryUrls = [];
-
-        for (const file of req.files.images) {
-            try {
-                const result = await cloudinary.uploader.upload(file.tempFilePath);
-                cloudinaryUrls.push(result.secure_url);
-            } catch (error) {
-                console.error('Error uploading file:', error);
-            }
-        }
-
-        const existingProduct = await Product.findOne({ sn: req.body.sn });
-
-        if (existingProduct) {
-            return res.status(400).send('Try with a different Serial Number');
-        }
-
-        const newProduct = new Product({
-            ...req.body,
-            images: cloudinaryUrls,
-        });
-
-        await newProduct.save();
-        res.send({ message: 'Product Added' });
-
-    } catch (e) {
-        console.log(e);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
-
-app.get('/product', async (req, res) => {
-
-    try {
-        const newProduct = await Product.find().sort({ _id: -1 })
-        res.json(newProduct)
-    } catch (e) {
-        console.log(e)
-
-    }
-})
-
-
 app.post('/session-check', async (req, res) => {
 
     token.verify(req.body.token, "My user", async function (err, dataObj) {
@@ -186,6 +139,53 @@ app.delete('/deleteUser', async function (req, res) {
         res.send(e)
     }
 
+})
+
+
+app.post('/product', async (req, res) => {
+    try {
+
+        const cloudinaryUrls = [];
+
+        for (const file of req.files.images) {
+            try {
+                const result = await cloudinary.uploader.upload(file.tempFilePath);
+                cloudinaryUrls.push(result.secure_url);
+            } catch (error) {
+                console.error('Error uploading file:', error);
+            }
+        }
+
+        const existingProduct = await Product.findOne({ sn: req.body.sn });
+
+        if (existingProduct) {
+            return res.status(400).send('Try with a different Serial Number');
+        }
+
+        const newProduct = new Product({
+            ...req.body,
+            images: cloudinaryUrls,
+        });
+
+        await newProduct.save();
+        res.send({ message: 'Product Added' });
+
+    } catch (e) {
+        console.log(e);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+app.get('/product', async (req, res) => {
+
+    try {
+        const newProduct = await Product.find().sort({ _id: -1 })
+        res.json(newProduct)
+    } catch (e) {
+        console.log(e)
+
+    }
 })
 
 
