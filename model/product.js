@@ -1,6 +1,8 @@
 let mongoose = require("mongoose");
 
 let productSchema = mongoose.Schema({
+    trending:String,
+    feature:String,
     images: [String],
     discount: {
         type: Number,
