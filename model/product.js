@@ -3,7 +3,6 @@ let mongoose = require("mongoose");
 let productSchema = mongoose.Schema({
     trending:String,
     feature:String,
-    shipping:Number,
     images: [String],
     discount: {
         type: Number,
