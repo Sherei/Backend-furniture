@@ -45,7 +45,55 @@ const Product = require('./model/product')
 
 const Comment = require('./model/comments')
 
+const Cart = require('./model/cart')
+
 const token = require('jsonwebtoken');
+
+
+app.post("/addToCart", async function (req, res) {
+
+    try {
+        const existingProduct = await Cart.findOne({ productId: req.body.productId });
+
+        if (existingProduct) {
+
+            return res.status(400).send("Product is already into Cart");
+        }
+
+        const newCart = new Cart(req.body);
+
+        await newCart.save();
+
+        res.send("Product Added");
+
+    } catch (e) {
+        console.log(e);
+        res.status(500).send("Internal Server Error");
+    }
+})
+
+app.get("/addToCart", async function (req, res) {
+
+    try {
+        const newCart = await Cart.find().sort({ _id: -1 })
+        res.json(newCart)
+    } catch (e) {
+        console.log(e)
+    }
+})
+
+app.delete('/deleteCart', async function (req, res) {
+
+    try {
+
+        await Cart.findByIdAndDelete(req.query.id)
+        res.end("Delete ho gya")
+
+    } catch (e) {
+        res.send(e)
+    }
+
+})
 
 
 app.post('/product', async (req, res) => {
@@ -173,6 +221,7 @@ app.delete('/deleteUser', async function (req, res) {
         await SignupUsers.findByIdAndDelete(req.query.id)
 
         res.end("Delete ho gya")
+        
     } catch (e) {
         res.send(e)
     }
@@ -192,8 +241,6 @@ app.get('/product', async (req, res) => {
 
     }
 })
-
-
 
 
 app.get('/singleProduct', async (req, res) => {
@@ -262,6 +309,8 @@ app.delete('/deleteComment', async function (req, res) {
     }
 
 })
+
+
 
 app.get("/dashboard", async function (req, res) {
     try {
