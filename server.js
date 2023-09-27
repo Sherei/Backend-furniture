@@ -82,6 +82,27 @@ app.get("/addToCart", async function (req, res) {
     }
 })
 
+app.put("/updateCart", async function (req, res) {
+    try {
+      const updatedCartData = req.body;
+  for (const item of updatedCartData) {
+        await Cart.updateOne(
+          { _id: item._id },
+          {
+            quantity: item.quantity,
+            Fprice: item.Fprice, 
+          }
+        );
+      }
+      res.send("Cart updated successfully");
+    } catch (e) {
+      console.log(e);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+  
+
+  
 app.delete('/deleteCart', async function (req, res) {
 
     try {
