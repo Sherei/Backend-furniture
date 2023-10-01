@@ -2,14 +2,15 @@ let mongoose= require("mongoose");
 
 let userSchema= mongoose.Schema({
     name: String,
+    address:String,
+    password:String,
+    cpassword:String,   
+    number:Number,
     email: {
         type:String,
         unique:true,
     },
-    password:String,
-    cpassword:String,   
    
-    number:Number,
     date:{
         type:Date,
         default:Date.now,

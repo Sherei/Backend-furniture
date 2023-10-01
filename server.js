@@ -47,12 +47,92 @@ const Comment = require('./model/comments')
 
 const Cart = require('./model/cart')
 
+const Orders = require('./model/Order')
+
 const token = require('jsonwebtoken');
+
+
+app.post('/Order', async (req, res) => {
+
+    try {
+
+        const orderItems = JSON.parse(req.body.orderItems);
+
+        const newOrder = new Orders({
+            name1: req.body.name1,
+            name2: req.body.name2,
+            userId: req.body.userId,
+            orderId:req.body.orderId,
+            number1: req.body.number1,
+            number2: req.body.number2,
+            orderItems: orderItems,
+            email: req.body.email,
+            shipping: req.body.shipping,
+            payment: req.body.payment,
+        });
+
+        await newOrder.save();
+
+        res.send('Order is Placed');
+
+        await Cart.deleteMany({ userId: req.body.userId });
+
+
+    } catch (e) {
+        console.error(e);
+        res.status(500).send('Error placing the order');
+    }
+});
+
+
+app.get('/order', async (req, res) => {
+    try {
+
+        const newOrder = await Orders.find().sort({ _id: -1 });
+        res.json(newOrder);
+
+    } catch (e) {
+        console.log(e);
+        res.status(500).send('Error fetching orders');
+    }
+});
+
+
+app.get('/orderDetail', async (req, res) => {
+
+    try {
+
+        const singleOrder = await Orders.findById(req.query.id)
+        res.json(singleOrder)
+
+    } catch (e) {
+        res.end(e)
+    }
+})
+
+app.put('/updateStatus', async (req, res) => {
+    try {
+        const orderId = req.body.id;
+        const newStatus = req.body.status;
+
+        const updatedOrder = await Orders.findByIdAndUpdate(orderId, { status: newStatus }, { new: true });
+
+        if (!updatedOrder) {
+            return res.status(404).send('Order not found');
+        }
+
+        res.json(updatedOrder);
+    } catch (e) {
+        console.error(e);
+        res.status(500).send('Error updating order status');
+    }
+});
 
 
 app.post("/addToCart", async function (req, res) {
 
     try {
+
         const existingProduct = await Cart.findOne({ productId: req.body.productId });
 
         if (existingProduct) {
@@ -84,25 +164,23 @@ app.get("/addToCart", async function (req, res) {
 
 app.put("/updateCart", async function (req, res) {
     try {
-      const updatedCartData = req.body;
-  for (const item of updatedCartData) {
-        await Cart.updateOne(
-          { _id: item._id },
-          {
-            quantity: item.quantity,
-            Fprice: item.Fprice, 
-          }
-        );
-      }
-      res.send("Cart updated successfully");
+        const updatedCartData = req.body;
+        for (const item of updatedCartData) {
+            await Cart.updateOne(
+                { _id: item._id },
+                {
+                    quantity: item.quantity,
+                    Fprice: item.Fprice,
+                }
+            );
+        }
+        res.send("Cart updated successfully");
     } catch (e) {
-      console.log(e);
-      res.status(500).send("Internal Server Error");
+        console.log(e);
+        res.status(500).send("Internal Server Error");
     }
-  });
-  
+});
 
-  
 app.delete('/deleteCart', async function (req, res) {
 
     try {
@@ -115,6 +193,8 @@ app.delete('/deleteCart', async function (req, res) {
     }
 
 })
+
+
 
 
 app.post('/product', async (req, res) => {
@@ -242,7 +322,7 @@ app.delete('/deleteUser', async function (req, res) {
         await SignupUsers.findByIdAndDelete(req.query.id)
 
         res.end("Delete ho gya")
-        
+
     } catch (e) {
         res.send(e)
     }
@@ -338,7 +418,8 @@ app.get("/dashboard", async function (req, res) {
         const Users = await SignupUsers.find()
         const Products = await Product.find()
         const comments = await Comment.find()
-        res.json({ Users, Products, comments })
+        const orders = await Orders.find()
+        res.json({ Users, Products, comments, orders })
     } catch (e) {
         res.send(e)
     }
