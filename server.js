@@ -62,7 +62,7 @@ app.post('/Order', async (req, res) => {
             name1: req.body.name1,
             name2: req.body.name2,
             userId: req.body.userId,
-            orderId:req.body.orderId,
+            orderId: req.body.orderId,
             number1: req.body.number1,
             number2: req.body.number2,
             orderItems: orderItems,
@@ -418,8 +418,8 @@ app.get("/dashboard", async function (req, res) {
         const Users = await SignupUsers.find()
         const Products = await Product.find()
         const comments = await Comment.find()
-        const orders = await Orders.find()
-        res.json({ Users, Products, comments, orders })
+        const order = await Orders.find()
+        res.json({ Users, Products, comments, order })
     } catch (e) {
         res.send(e)
     }
