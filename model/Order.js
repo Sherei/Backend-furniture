@@ -17,8 +17,14 @@ const orderSchema = new mongoose.Schema({
     name2: String,
     userId: String,
     orderId: String,
-    number1: String,
-    number2: String,
+    number1: {
+        type:Number,
+        trim:true
+    },
+    number2: {
+        type:Number,
+        trim:true
+    },
     status: String,
     orderItems: [orderItemSchema],
     email: String,

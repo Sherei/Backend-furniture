@@ -5,10 +5,14 @@ let userSchema= mongoose.Schema({
     address:String,
     password:String,
     cpassword:String,   
-    number:Number,
+    number:{
+        type:Number,
+        trim:true
+    },
     email: {
         type:String,
         unique:true,
+        trim:true,
     },
    
     date:{
