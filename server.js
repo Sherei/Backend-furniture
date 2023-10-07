@@ -16,10 +16,23 @@ app.use(fileUpload({
 const cloudinary = require('cloudinary').v2;
 
 const corsOptions = {
-    origin: "*",
+    origin: function (origin, callback) {
+        const allowedOrigins = [
+            "https://myshop-lilac.vercel.app",
+            "http://localhost:3010",
+        ];
+
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     optionsSuccessStatus: 204,
 };
+
 app.use(cors(corsOptions));
+
 
 cloudinary.config({
 
@@ -55,7 +68,7 @@ const token = require('jsonwebtoken');
 
 
 
-app.post('/product', async (req, res) => {
+app.post('/product', cors(corsOptions), async (req, res) => {
     try {
 
         const cloudinaryUrls = [];
