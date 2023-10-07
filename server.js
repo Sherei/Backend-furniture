@@ -109,22 +109,12 @@ app.post('/signUp', async (req, res) => {
 
             return res.status(400).send("User with this email already exists");
         }
-
-        if (req.body.password === req.body.cpassword) {
-
-            // req.body.password = await bcrypt.hash(req.body.password, 10);
-
-            // req.body.cpassword = await bcrypt.hash(req.body.cpassword, 10);
-
             const newUser = new SignupUsers(req.body);
 
             await newUser.save();
 
             res.send("User Created");
 
-        } else {
-            res.send("Passwords do not match");
-        }
     } catch (e) {
         console.log(e);
         res.status(500).send("Internal Server Error");
