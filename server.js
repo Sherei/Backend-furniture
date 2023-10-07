@@ -50,6 +50,42 @@ const Cart = require('./model/cart')
 const Orders = require('./model/Order')
 
 const token = require('jsonwebtoken');
+app.post('/product', async (req, res) => {
+    try {
+
+        const cloudinaryUrls = [];
+
+        const images = Array.isArray(req.files.images) ? req.files.images : [req.files.images];
+
+        for (const file of images) {
+            try {
+                const result = await cloudinary.uploader.upload(file.tempFilePath);
+                cloudinaryUrls.push(result.secure_url);
+            } catch (error) {
+                console.error('Error uploading file:', error);
+            }
+        }
+
+        const existingProduct = await Product.findOne({ sn: req.body.sn });
+
+        if (existingProduct) {
+            return res.status(400).send('Try with a different Serial Number');
+        }
+
+        const newProduct = new Product({
+            ...req.body,
+            images: cloudinaryUrls,
+        });
+
+        await newProduct.save();
+        res.send({ message: 'Product Added' });
+
+    } catch (e) {
+        console.log(e);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 
 app.post('/Order', async (req, res) => {
@@ -196,42 +232,6 @@ app.delete('/deleteCart', async function (req, res) {
 
 
 
-
-app.post('/product', async (req, res) => {
-    try {
-
-        const cloudinaryUrls = [];
-
-        const images = Array.isArray(req.files.images) ? req.files.images : [req.files.images];
-
-        for (const file of images) {
-            try {
-                const result = await cloudinary.uploader.upload(file.tempFilePath);
-                cloudinaryUrls.push(result.secure_url);
-            } catch (error) {
-                console.error('Error uploading file:', error);
-            }
-        }
-
-        const existingProduct = await Product.findOne({ sn: req.body.sn });
-
-        if (existingProduct) {
-            return res.status(400).send('Try with a different Serial Number');
-        }
-
-        const newProduct = new Product({
-            ...req.body,
-            images: cloudinaryUrls,
-        });
-
-        await newProduct.save();
-        res.send({ message: 'Product Added' });
-
-    } catch (e) {
-        console.log(e);
-        res.status(500).send('Internal Server Error');
-    }
-});
 
 
 
