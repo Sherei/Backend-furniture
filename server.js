@@ -39,6 +39,8 @@ app.listen(port, function () {
 
 require("./model/db")
 
+const bcrypt = require('bcrypt');
+
 const SignupUsers = require('./model/user')
 
 const Product = require('./model/product')
@@ -50,6 +52,8 @@ const Cart = require('./model/cart')
 const Orders = require('./model/Order')
 
 const token = require('jsonwebtoken');
+
+
 
 app.post('/product', async (req, res) => {
     try {
@@ -106,14 +110,21 @@ app.post('/signUp', async (req, res) => {
         const existingUser = await SignupUsers.findOne({ email: req.body.email });
 
         if (existingUser) {
-
             return res.status(400).send("User with this email already exists");
         }
-            const newUser = new SignupUsers(req.body);
 
-            await newUser.save();
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const hashedCPassword = await bcrypt.hash(req.body.cpassword, 10);
 
-            res.send("User Created");
+        const newUser = new SignupUsers({
+            ...req.body,
+            password: hashedPassword,
+            cpassword: hashedCPassword,
+        });
+
+        await newUser.save();
+
+        res.send("User Created");
 
     } catch (e) {
         console.log(e);
@@ -122,29 +133,32 @@ app.post('/signUp', async (req, res) => {
 });
 
 
+
+
 app.post('/login', async (req, res) => {
-
     try {
-
-        const user = await SignupUsers.findOne({ email: req.body.email, password: req.body.password })
+        const user = await SignupUsers.findOne({ email: req.body.email });
 
         if (!user) {
             return res.status(404).json({ message: "Invalid credentials" });
         }
-        else if (user) {
+
+        const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
+
+        if (isPasswordValid) {
             token.sign({ tokenId: user._id }, "My user", { expiresIn: "1y" }, async (err, myToken) => {
                 res.json({ user, myToken });
             });
-        }
-        else {
-            res.status(404).json({ message: "Invalid credentials" })
+        } else {
+            res.status(404).json({ message: "Invalid credentials" });
         }
 
     } catch (e) {
         console.log(e);
         res.status(500).send("Internal Server Error");
     }
-})
+});
+
 
 app.get('/Users', async (req, res) => {
 
@@ -358,6 +372,19 @@ app.put('/updateStatus', async (req, res) => {
     }
 });
 
+app.delete('/deleteOrder', async function (req, res) {
+
+    try {
+
+        await Orders.findByIdAndDelete(req.query.id)
+
+        res.end("Delete ho gya")
+
+    } catch (e) {
+        res.send(e)
+    }
+
+})
 
 app.post('/comments', async (req, res) => {
     try {
