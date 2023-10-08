@@ -16,7 +16,7 @@ app.use(fileUpload({
 const cloudinary = require('cloudinary').v2;
 
 const corsOptions = {
-    origin: ["http://localhost:3000", "https://myshop-lilac.vercel.app"],
+    origin: "*",
     optionsSuccessStatus: 204,
 };
 
@@ -146,7 +146,7 @@ app.post('/login', async (req, res) => {
 
         const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
 
-        if (isPasswordValid) {  
+        if (isPasswordValid) {
             token.sign({ tokenId: user._id }, "My user", { expiresIn: "1y" }, async (err, myToken) => {
                 res.json({ user, myToken });
             });
@@ -429,8 +429,10 @@ app.get("/dashboard", async function (req, res) {
         const Users = await SignupUsers.find()
         const Products = await Product.find()
         const comments = await Comment.find()
-        const order = await Orders.find()
-        res.json({ Users, Products, comments, order })
+        const allOrder = await Orders.find()
+
+        res.json({ Users, Products, comments, allOrder })
+   
     } catch (e) {
         res.send(e)
     }
