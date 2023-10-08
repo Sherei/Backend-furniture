@@ -146,7 +146,7 @@ app.post('/login', async (req, res) => {
 
         const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
 
-        if (isPasswordValid) {
+        if (isPasswordValid) {  
             token.sign({ tokenId: user._id }, "My user", { expiresIn: "1y" }, async (err, myToken) => {
                 res.json({ user, myToken });
             });
