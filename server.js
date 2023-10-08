@@ -10,7 +10,7 @@ require('dotenv').config();
 
 const fileUpload = require('express-fileupload')
 app.use(fileUpload({
-    useTempFiles: true
+    useTempFiles: true,
 }))
 
 const cloudinary = require('cloudinary').v2;
