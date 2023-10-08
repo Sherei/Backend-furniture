@@ -17,6 +17,7 @@ const cloudinary = require('cloudinary').v2;
 
 const corsOptions = {
     origin: "*",
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204,
 };
 
