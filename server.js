@@ -16,9 +16,10 @@ app.use(fileUpload({
 const cloudinary = require('cloudinary').v2;
 
 const corsOptions = {
-    origin: "*",
+    origin: ["http://localhost:3000", "https://myshop-lilac.vercel.app"],
     optionsSuccessStatus: 204,
 };
+
 app.use(cors(corsOptions));
 
 
@@ -56,7 +57,7 @@ const token = require('jsonwebtoken');
 
 
 
-app.post('/product', cors(corsOptions), async (req, res) => {
+app.post('/product', async (req, res) => {
     try {
 
         const cloudinaryUrls = [];
