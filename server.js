@@ -93,8 +93,6 @@ app.post('/product', async (req, res) => {
     }
 });
 
-
-
 app.post('/session-check', async (req, res) => {
 
     token.verify(req.body.token, "My user", async function (err, dataObj) {
