@@ -129,7 +129,6 @@ app.post('/signUp', async (req, res) => {
         res.send("User Created");
 
     } catch (e) {
-        console.log(e);
         res.status(500).send("Internal Server Error");
     }
 });
@@ -142,7 +141,7 @@ app.post('/login', async (req, res) => {
         const user = await SignupUsers.findOne({ email: req.body.email });
 
         if (!user) {
-            return res.status(404).json({ message: "Invalid credentials" });
+            return res.status(404).send("Invalid Credentials");
         }
 
         const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
@@ -152,11 +151,10 @@ app.post('/login', async (req, res) => {
                 res.json({ user, myToken });
             });
         } else {
-            res.status(404).json({ message: "Invalid credentials" });
+            res.status(404).send("Invalid Credentials");
         }
 
     } catch (e) {
-        console.log(e);
         res.status(500).send("Internal Server Error");
     }
 });
