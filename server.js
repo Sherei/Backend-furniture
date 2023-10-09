@@ -233,7 +233,7 @@ app.post("/addToCart", async function (req, res) {
 
     try {
 
-        const existingProduct = await Cart.findOne({ productId: req.body.productId });
+        const existingProduct = await Cart.findOne({ productId: req.body.productId, userId: req.body.userId });
 
         if (existingProduct) {
 
@@ -431,7 +431,7 @@ app.get("/dashboard", async function (req, res) {
         const allOrder = await Orders.find()
 
         res.json({ Users, Products, comments, allOrder })
-   
+
     } catch (e) {
         res.send(e)
     }
