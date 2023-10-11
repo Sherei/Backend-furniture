@@ -21,7 +21,7 @@ const corsOptions = {
     optionsSuccessStatus: 204,
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 
 cloudinary.config({
