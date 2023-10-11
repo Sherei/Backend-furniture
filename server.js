@@ -15,15 +15,13 @@ app.use(fileUpload({
 
 const cloudinary = require('cloudinary').v2;
 
-
-
 const corsOptions = {
     origin: "*",
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204,
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 
 cloudinary.config({
