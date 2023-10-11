@@ -6,10 +6,15 @@
       "use": "@vercel/node"
     }
   ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "server.js"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
-      "dest": "server.js",
       "headers": [
         {
           "key": "Access-Control-Allow-Credentials",
