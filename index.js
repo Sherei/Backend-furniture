@@ -66,7 +66,7 @@ app.post('/product', async (req, res) => {
         for (const file of images) {
             console.log("file:::", file)
             try {
-                const result = await cloudinary.uploader.upload(file);
+                const result = await cloudinary.uploader.upload(file, (res)=> res);
                 console.log("result:::", result)
                 cloudinaryUrls.push(result.secure_url);
             } catch (error) {
