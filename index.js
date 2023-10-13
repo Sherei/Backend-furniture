@@ -6,21 +6,19 @@ const cors = require('cors')
 
 require('dotenv').config();
 
-const fileUpload = require('express-fileupload')
+// const fileUpload = require('express-fileupload')
 
 
-app.use(fileUpload({
-    useTempFiles: true,
-}))
+// app.use(fileUpload())
 
 const cloudinary = require('cloudinary').v2;
 
-const corsOptions = {
-    origin: "*",
-    optionsSuccessStatus: 204,
-};
+// const corsOptions = {
+//     origin: "*",
+//     optionsSuccessStatus: 204,
+// };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(myExpress.json())
 
@@ -68,7 +66,7 @@ app.post('/product', async (req, res) => {
         for (const file of images) {
             console.log("file:::", file)
             try {
-                const result = await cloudinary.uploader.upload(file.tempFilePath);
+                const result = await cloudinary.uploader.upload(file);
                 console.log("result:::", result)
                 cloudinaryUrls.push(result.secure_url);
             } catch (error) {
