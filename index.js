@@ -2,13 +2,12 @@ const myExpress = require('express');
 
 const app = myExpress();
 
-app.use(myExpress.json())
-
 const cors = require('cors')
 
 require('dotenv').config();
 
 const fileUpload = require('express-fileupload')
+
 
 app.use(fileUpload({
     useTempFiles: true,
@@ -18,12 +17,12 @@ const cloudinary = require('cloudinary').v2;
 
 const corsOptions = {
     origin: "*",
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
 
+app.use(myExpress.json())
 
 cloudinary.config({
 
@@ -67,8 +66,10 @@ app.post('/product', async (req, res) => {
         const images = Array.isArray(req.files.images) ? req.files.images : [req.files.images];
 
         for (const file of images) {
+            console.log("file:::", file)
             try {
                 const result = await cloudinary.uploader.upload(file.tempFilePath);
+                console.log("result:::", result)
                 cloudinaryUrls.push(result.secure_url);
             } catch (error) {
                 console.error('Error uploading file:', error);
