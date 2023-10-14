@@ -53,9 +53,6 @@ const token = require('jsonwebtoken');
 
 app.post('/product', async (req, res) => {
     try {
-
-        const imageUrls = [];
-
         const existingProduct = await Product.findOne({ sn: req.body.sn });
 
         if (existingProduct) {
