@@ -6,11 +6,6 @@ const cors = require('cors')
 
 require('dotenv').config();
 
-// const fileUpload = require('express-fileupload')
-
-
-// app.use(fileUpload())
-
 const cloudinary = require('cloudinary').v2;
 
 // const corsOptions = {
@@ -22,15 +17,15 @@ app.use(cors());
 
 app.use(myExpress.json())
 
-cloudinary.config({
+// cloudinary.config({
 
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+//     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
 
-    api_key: process.env.CLOUDINARY_API_KEY,
+//     api_key: process.env.CLOUDINARY_API_KEY,
 
-    api_secret: process.env.CLOUDINARY_API_SECRET,
+//     api_secret: process.env.CLOUDINARY_API_SECRET,
 
-});
+// });
 
 const port = process.env.PORT || 3010;
 
@@ -59,20 +54,7 @@ const token = require('jsonwebtoken');
 app.post('/product', async (req, res) => {
     try {
 
-        const cloudinaryUrls = [];
-
-        const images = Array.isArray(req.files.images) ? req.files.images : [req.files.images];
-
-        for (const file of images) {
-            console.log("file:::", file)
-            try {
-                const result = await cloudinary.uploader.upload(file, (res)=> res);
-                console.log("result:::", result)
-                cloudinaryUrls.push(result.secure_url);
-            } catch (error) {
-                console.error('Error uploading file:', error);
-            }
-        }
+        const imageUrls = [];
 
         const existingProduct = await Product.findOne({ sn: req.body.sn });
 
@@ -81,8 +63,7 @@ app.post('/product', async (req, res) => {
         }
 
         const newProduct = new Product({
-            ...req.body,
-            images: cloudinaryUrls,
+            ...req.body
         });
 
         await newProduct.save();
@@ -93,6 +74,8 @@ app.post('/product', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 app.post('/session-check', async (req, res) => {
 
