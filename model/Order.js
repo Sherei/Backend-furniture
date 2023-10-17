@@ -17,6 +17,7 @@ const orderSchema = new mongoose.Schema({
     name2: String,
     userId: String,
     orderId: String,
+    orderItems: [orderItemSchema],
     number1: {
         type:Number,
         trim:true
@@ -26,7 +27,6 @@ const orderSchema = new mongoose.Schema({
         trim:true
     },
     status: String,
-    orderItems: [orderItemSchema],
     email: String,
     shipping: String,
     payment: String,

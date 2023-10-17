@@ -2,7 +2,7 @@ let mongoose = require("mongoose");
 
 let cartSchema = mongoose.Schema({
     title:String,
-    image:String,
+    image: String,
     productId:String,
     userId:String,
     quantity:Number,

@@ -4,12 +4,17 @@ let productSchema = mongoose.Schema({
     trending:String,
     feature:String,
     images: [String],
-    discount: {
+    title:String,
+    description:String,
+    category: String,
+    subCategory:String,
+    sn: {
         type: Number,
         trim: true,
+        unique:true,
     },
-    title: {
-        type: String,
+    discount: {
+        type: Number,
         trim: true,
     },
     price: {
@@ -18,23 +23,6 @@ let productSchema = mongoose.Schema({
     },
     Fprice: {
         type: Number,
-        trim: true,
-    },
-    description: {
-        type: String,
-        trim: true,
-    },
-    sn: {
-        type: Number,
-        trim: true,
-        unique: true,
-    },
-    category: {
-        type: String,
-        trim: true,
-    },
-    subCategory: {
-        type: String,
         trim: true,
     },
     date: {
