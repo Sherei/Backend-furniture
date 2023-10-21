@@ -32,38 +32,6 @@ const Orders = require('./model/Order')
 const token = require('jsonwebtoken');
 
 
-app.post('/Order', async (req, res) => {
-
-    try {
-
-        const orderItems = JSON.parse(req.body.orderItems);
-
-        const newOrder = new Orders({
-            name1: req.body.name1,
-            name2: req.body.name2,
-            userId: req.body.userId,
-            orderId: req.body.orderId,
-            number1: req.body.number1,
-            number2: req.body.number2,
-            orderItems: orderItems,
-            email: req.body.email,
-            shipping: req.body.shipping,
-            payment: req.body.payment,
-        });
-
-        await newOrder.save();
-
-        res.send('Order is Placed');
-
-        await Cart.deleteMany({ userId: req.body.userId });
-
-
-    } catch (e) {
-        console.error(e);
-        res.status(500).send('Error placing the order');
-    }
-});
-
 
 app.post('/product', async (req, res) => {
     
@@ -292,6 +260,38 @@ app.delete('/deleteCart', async function (req, res) {
 })
 
 
+
+app.post('/Order', async (req, res) => {
+
+    try {
+
+        const orderItems = JSON.parse(req.body.orderItems);
+
+        const newOrder = new Orders({
+            name1: req.body.name1,
+            name2: req.body.name2,
+            userId: req.body.userId,
+            orderId: req.body.orderId,
+            number1: req.body.number1,
+            number2: req.body.number2,
+            orderItems: orderItems,
+            email: req.body.email,
+            shipping: req.body.shipping,
+            payment: req.body.payment,
+        });
+
+        await newOrder.save();
+
+        res.send('Order is Placed');
+
+        await Cart.deleteMany({ userId: req.body.userId });
+
+
+    } catch (e) {
+        console.error(e);
+        res.status(500).send('Error placing the order');
+    }
+});
 
 
 app.get('/order', async (req, res) => {
