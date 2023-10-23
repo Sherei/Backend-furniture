@@ -34,7 +34,7 @@ const token = require('jsonwebtoken');
 
 
 app.post('/product', async (req, res) => {
-    
+
     try {
 
         const existingProduct = await Product.findOne({ sn: req.body.sn });
@@ -56,6 +56,30 @@ app.post('/product', async (req, res) => {
 
 });
 
+
+app.get("/product_edit", async function (req, res) {
+
+    try {
+
+        let product = await Product.findById(req.query.id);
+        res.json(product);
+
+    } catch (e) {
+
+        res.status(500).json(e);
+    }
+})
+
+app.put('/product-update', async function (req, res) {
+
+    await Product.findByIdAndUpdate(req.body._id, req.body);
+
+    let product = await Product.findById(req.body._id);
+
+    res.json({
+        success: true
+    })
+})
 
 
 app.post('/session-check', async (req, res) => {
