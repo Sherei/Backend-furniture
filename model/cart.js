@@ -5,6 +5,7 @@ let cartSchema = mongoose.Schema({
     image: String,
     productId:String,
     userId:String,
+    size:String,
     quantity:Number,
     price:Number,
     Fprice:Number,
