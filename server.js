@@ -69,17 +69,40 @@ app.get("/product_edit", async function (req, res) {
         res.status(500).json(e);
     }
 })
-
 app.put('/product-update', async function (req, res) {
 
-    await Product.findByIdAndUpdate(req.body._id, req.body);
+    const existingProduct = await Product.findById(req.body._id);
 
-    let product = await Product.findById(req.body._id);
+    try {
+        
+        const updateFields = {
+            sn: req.body.sn !== undefined ? req.body.sn : existingProduct.sn,
+            title: req.body.title !== undefined ? req.body.title : existingProduct.title,
+            description: req.body.description !== undefined ? req.body.description : existingProduct.description,
+            category: req.body.category !== undefined ? req.body.category : existingProduct.category,
+            subCategory: req.body.subCategory !== undefined ? req.body.subCategory : existingProduct.subCategory,
+            discount: req.body.discount !== undefined ? req.body.discount : existingProduct.discount,
+            price: req.body.price !== undefined ? req.body.price : existingProduct.price,
+            Fprice: req.body.Fprice !== undefined ? req.body.Fprice : existingProduct.Fprice,
+            trending: req.body.trending !== undefined ? req.body.trending : existingProduct.trending,
+            feature: req.body.feature !== undefined ? req.body.feature : existingProduct.feature,
+            images: req.body.images !== undefined ? req.body.images : existingProduct.images,
+        };
 
-    res.json({
-        success: true
-    })
-})
+        const updatedProduct = await Product.findByIdAndUpdate(req.body._id, updateFields, { new: true });
+
+        res.json({
+            success: true,
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to update the product.',
+        });
+    }
+});
 
 
 app.post('/session-check', async (req, res) => {
