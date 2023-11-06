@@ -5,9 +5,14 @@ const cartSchema = mongoose.Schema({
     image: String,
     productId: String,
     userId: String,
-    size: String,      // Include size field
-    mattress: String,  // Include mattress field
-    color: String,     // Include color field
+    size:String,
+    color:String,
+    mattress:String,
+    detail:String,
+    base:String,
+    fabric:String,
+    headboard:String,
+    ottoman:String,
     quantity: Number,
     price: Number,
     Fprice: Number,

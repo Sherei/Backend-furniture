@@ -1,10 +1,10 @@
     let mongoose = require("mongoose");
 
     let productSchema = mongoose.Schema({
-        trending:String,
-        feature:String,
+        
         images: [String],
         title:String,
+
         description:String,
         category: String,
         subCategory:String,

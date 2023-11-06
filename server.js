@@ -69,40 +69,44 @@ app.get("/product_edit", async function (req, res) {
         res.status(500).json(e);
     }
 })
+
 app.put('/product-update', async function (req, res) {
-
-    const existingProduct = await Product.findById(req.body._id);
-
     try {
+        const productId = req.body._id;
+
+        // Fetch the existing product
+        const existingProduct = await Product.findById(productId);
+
+        if (!existingProduct) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        // Update fields that are modified
+        existingProduct.title = req.body.title || existingProduct.title;
+        existingProduct.sn = req.body.sn || existingProduct.sn;
+        existingProduct.category = req.body.category || existingProduct.category;
+        existingProduct.subCategory = req.body.subCategory || existingProduct.subCategory;
+        existingProduct.description = req.body.description || existingProduct.description;
+        existingProduct.price = req.body.price || existingProduct.price;
+        existingProduct.discount = req.body.discount || existingProduct.discount;
+        existingProduct.Fprice = req.body.Fprice || existingProduct.Fprice;
         
-        const updateFields = {
-            sn: req.body.sn !== undefined ? req.body.sn : existingProduct.sn,
-            title: req.body.title !== undefined ? req.body.title : existingProduct.title,
-            description: req.body.description !== undefined ? req.body.description : existingProduct.description,
-            category: req.body.category !== undefined ? req.body.category : existingProduct.category,
-            subCategory: req.body.subCategory !== undefined ? req.body.subCategory : existingProduct.subCategory,
-            discount: req.body.discount !== undefined ? req.body.discount : existingProduct.discount,
-            price: req.body.price !== undefined ? req.body.price : existingProduct.price,
-            Fprice: req.body.Fprice !== undefined ? req.body.Fprice : existingProduct.Fprice,
-            trending: req.body.trending !== undefined ? req.body.trending : existingProduct.trending,
-            feature: req.body.feature !== undefined ? req.body.feature : existingProduct.feature,
-            images: req.body.images !== undefined ? req.body.images : existingProduct.images,
-        };
+        // Check if new images are provided
+        if (req.body.images && req.body.images.length > 0) {
+            existingProduct.images = req.body.images;
+        }
 
-        const updatedProduct = await Product.findByIdAndUpdate(req.body._id, updateFields, { new: true });
+        // Save the updated product
+        await existingProduct.save();
 
-        res.json({
-            success: true,
-        });
+        res.json({ message: 'Product Updated' });
 
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            error: 'Failed to update the product.',
-        });
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
 
 
 app.post('/session-check', async (req, res) => {
@@ -244,7 +248,7 @@ app.delete('/deleteProduct', async function (req, res) {
 app.post("/addToCart", async function (req, res) {
 
     try {
-
+        console.log(req.body)
         const existingProduct = await Cart.findOne({ productId: req.body.productId, userId: req.body.userId });
 
         if (existingProduct) {
