@@ -81,7 +81,6 @@ app.put('/product-update', async function (req, res) {
             return res.status(404).json({ message: 'Product not found' });
         }
 
-        // Update fields that are modified
         existingProduct.title = req.body.title || existingProduct.title;
         existingProduct.sn = req.body.sn || existingProduct.sn;
         existingProduct.category = req.body.category || existingProduct.category;
@@ -91,12 +90,10 @@ app.put('/product-update', async function (req, res) {
         existingProduct.discount = req.body.discount || existingProduct.discount;
         existingProduct.Fprice = req.body.Fprice || existingProduct.Fprice;
         
-        // Check if new images are provided
         if (req.body.images && req.body.images.length > 0) {
             existingProduct.images = req.body.images;
         }
 
-        // Save the updated product
         await existingProduct.save();
 
         res.json({ message: 'Product Updated' });
@@ -446,7 +443,6 @@ app.get("/dashboard", async function (req, res) {
         const Products = await Product.find()
         const comments = await Comment.find()
         const allOrder = await Orders.find()
-
         res.json({ Users, Products, comments, allOrder })
 
     } catch (e) {

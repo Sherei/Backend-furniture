@@ -7,7 +7,7 @@ const cartSchema = mongoose.Schema({
     userId: String,
     size:String,
     color:String,
-    pillow:String,
+    mattress:String,
     detail:String,
     base:String,
     fabric:String,
