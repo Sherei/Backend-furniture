@@ -81,6 +81,7 @@ app.put('/product-update', async function (req, res) {
             return res.status(404).json({ message: 'Product not found' });
         }
 
+        // Update other fields
         existingProduct.title = req.body.title || existingProduct.title;
         existingProduct.sn = req.body.sn || existingProduct.sn;
         existingProduct.category = req.body.category || existingProduct.category;
@@ -89,9 +90,9 @@ app.put('/product-update', async function (req, res) {
         existingProduct.price = req.body.price || existingProduct.price;
         existingProduct.discount = req.body.discount || existingProduct.discount;
         existingProduct.Fprice = req.body.Fprice || existingProduct.Fprice;
-        
+
         if (req.body.images && req.body.images.length > 0) {
-            existingProduct.images = req.body.images;
+            existingProduct.images = [...existingProduct.images, ...req.body.images];
         }
 
         await existingProduct.save();
@@ -103,6 +104,8 @@ app.put('/product-update', async function (req, res) {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
+
 
 
 
