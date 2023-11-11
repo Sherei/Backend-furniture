@@ -85,7 +85,7 @@ app.put('/product-update', async function (req, res) {
         existingProduct.title = req.body.title || existingProduct.title;
         existingProduct.sn = req.body.sn || existingProduct.sn;
         existingProduct.category = req.body.category || existingProduct.category;
-        existingProduct.subCategory = req.body.subCategory || existingProduct.subCategory;
+        existingProduct.subCategory = req.body.subCategory;
         existingProduct.description = req.body.description || existingProduct.description;
         existingProduct.price = req.body.price || existingProduct.price;
         existingProduct.discount = req.body.discount || existingProduct.discount;
