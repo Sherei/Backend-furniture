@@ -16,6 +16,7 @@
         feature4:String,
         feature5:String,
         feature6:String,
+        feature7:String,
         note1:String,
         note2:String,
         category: String,

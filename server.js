@@ -97,6 +97,7 @@ app.put('/product-update', async function (req, res) {
         existingProduct.feature4 = req.body.feature4 || existingProduct.feature4;
         existingProduct.feature5 = req.body.feature5 || existingProduct.feature5;
         existingProduct.feature6 = req.body.feature6 || existingProduct.feature6;
+        existingProduct.feature7 = req.body.feature7 || existingProduct.feature7;
         existingProduct.note1 = req.body.note1 || existingProduct.note1;
         existingProduct.note2 = req.body.note2 || existingProduct.note2;
         existingProduct.price = req.body.price || existingProduct.price;
