@@ -4,10 +4,13 @@
         
         images: [String],
         title:String,
-
+        descriptionHead1:String,
         description:String,
+        descriptionHead2:String,
         description2:String,
+        descriptionHead3:String,
         description3:String,
+        descriptionHead4:String,
         description4:String,
         featureHead:String,
         feature1:String,

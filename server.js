@@ -86,9 +86,13 @@ app.put('/product-update', async function (req, res) {
         existingProduct.sn = req.body.sn || existingProduct.sn;
         existingProduct.category = req.body.category || existingProduct.category;
         existingProduct.subCategory = req.body.subCategory;
+        existingProduct.descriptionHead1 = req.body.descriptionHead1 || existingProduct.descriptionHead1;
         existingProduct.description = req.body.description || existingProduct.description;
+        existingProduct.descriptionHead2 = req.body.descriptionHead2 || existingProduct.descriptionHead2;
         existingProduct.description2 = req.body.description2 || existingProduct.description2;
+        existingProduct.descriptionHead3 = req.body.descriptionHead3 || existingProduct.descriptionHead3;
         existingProduct.description3 = req.body.description3 || existingProduct.description3;
+        existingProduct.descriptionHead4 = req.body.descriptionHead4 || existingProduct.descriptionHead4;
         existingProduct.description4 = req.body.description4 || existingProduct.description4;
         existingProduct.featureHead = req.body.featureHead || existingProduct.featureHead;
         existingProduct.feature1 = req.body.feature1 || existingProduct.feature1;
