@@ -6,6 +6,18 @@
         title:String,
 
         description:String,
+        description2:String,
+        description3:String,
+        description4:String,
+        featureHead:String,
+        feature1:String,
+        feature2:String,
+        feature3:String,
+        feature4:String,
+        feature5:String,
+        feature6:String,
+        note1:String,
+        note2:String,
         category: String,
         subCategory:String,
         sn: {
