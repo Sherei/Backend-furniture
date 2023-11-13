@@ -113,8 +113,8 @@ app.put('/product-update', async function (req, res) {
         existingProduct.discount = req.body.discount || existingProduct.discount;
         existingProduct.Fprice = req.body.Fprice || existingProduct.Fprice;
 
-        if (req.body.images && req.body.images.length > 0) {
-            existingProduct.images = [...existingProduct.images, ...req.body.images];
+        if (req.body.images && req.body.images.length > existingProduct.images.length) {
+            existingProduct.images = req.body.images;
         }
 
         await existingProduct.save();
