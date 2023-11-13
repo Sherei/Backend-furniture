@@ -86,31 +86,36 @@ app.put('/product-update', async function (req, res) {
         existingProduct.sn = req.body.sn || existingProduct.sn;
         existingProduct.category = req.body.category || existingProduct.category;
         existingProduct.subCategory = req.body.subCategory;
-        existingProduct.descriptionHead1 = req.body.descriptionHead1 || "";
-        existingProduct.description = req.body.description || "";
-        existingProduct.descriptionHead2 = req.body.descriptionHead2 || "";
-        existingProduct.description2 = req.body.description2 || "";
-        existingProduct.descriptionHead3 = req.body.descriptionHead3 || "";
-        existingProduct.description3 = req.body.description3 || "";
-        existingProduct.descriptionHead4 = req.body.descriptionHead4 || "";
-        existingProduct.description4 = req.body.description4 || "";
-        existingProduct.featureHead = req.body.featureHead || "";
-        existingProduct.feature1 = req.body.feature1 || "";
-        existingProduct.feature2 = req.body.feature2 || "";
-        existingProduct.feature3 = req.body.feature3 || "";
-        existingProduct.feature4 = req.body.feature4 || "";
-        existingProduct.feature5 = req.body.feature5 ||"";
-        existingProduct.feature6 = req.body.feature6 || "";
-        existingProduct.feature7 = req.body.feature7 || "";
-        existingProduct.note1 = req.body.note1 || "";
-        existingProduct.note2 = req.body.note2 || "";
+        existingProduct.descriptionHead1 = req.body.descriptionHead1 || existingProduct.descriptionHead1;
+        existingProduct.description = req.body.description || existingProduct.description;
+        existingProduct.descriptionHead2 = req.body.descriptionHead2 || existingProduct.descriptionHead2;
+        existingProduct.description2 = req.body.description2 || existingProduct.description2;
+        existingProduct.descriptionHead3 = req.body.descriptionHead3 || existingProduct.descriptionHead3;
+        existingProduct.description3 = req.body.description3 || existingProduct.description3;
+        existingProduct.descriptionHead4 = req.body.descriptionHead4 || existingProduct.descriptionHead4;
+        existingProduct.description4 = req.body.description4 || existingProduct.description4;
+        existingProduct.featureHead = req.body.featureHead || existingProduct.featureHead;
+        existingProduct.feature1 = req.body.feature1 || existingProduct.feature1;
+        existingProduct.feature2 = req.body.feature2 || existingProduct.feature2;
+        existingProduct.feature3 = req.body.feature3 || existingProduct.feature3;
+        existingProduct.feature4 = req.body.feature4 || existingProduct.feature4;
+        existingProduct.feature5 = req.body.feature5 || existingProduct.feature5;
+        existingProduct.feature6 = req.body.feature6 || existingProduct.feature6;
+        existingProduct.feature7 = req.body.feature7 || existingProduct.feature7;
+        existingProduct.dimensionHead = req.body.dimensionHead || existingProduct.dimensionHead;
+        existingProduct.dimension1 = req.body.dimension1 || existingProduct.dimension1;
+        existingProduct.dimension2 = req.body.dimension2 || existingProduct.dimension2;
+        existingProduct.dimension3 = req.body.dimension3 || existingProduct.dimension3;
+        existingProduct.dimension4 = req.body.dimension4 || existingProduct.dimension4;
+        existingProduct.note1 = req.body.note1 || existingProduct.note1;
+        existingProduct.note2 = req.body.note2 || existingProduct.note2;
         existingProduct.price = req.body.price || existingProduct.price;
         existingProduct.discount = req.body.discount || existingProduct.discount;
         existingProduct.Fprice = req.body.Fprice || existingProduct.Fprice;
 
         if (req.body.images && req.body.images.length > 0) {
             existingProduct.images = [...existingProduct.images, ...req.body.images];
-        }   
+        }
 
         await existingProduct.save();
 

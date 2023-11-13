@@ -22,6 +22,11 @@
         feature7:String,
         note1:String,
         note2:String,
+        dimensionHead:String,
+        dimension1:String,
+        dimension2:String,
+        dimension3:String,
+        dimension4:String,
         category: String,
         subCategory:String,
         sn: {
