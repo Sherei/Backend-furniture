@@ -81,8 +81,8 @@ app.put('/product-update', async function (req, res) {
             return res.status(404).json({ message: 'Product not found' });
         }
 
-        if (req.body.images && (req.body.images.length < 1 || req.body.images.length > 5)) {
-            return res.status(400).json({ message: 'Invalid number of images. Must be between 1 and 5.' });
+        if (req.body.images && (req.body.images.length < 1 || req.body.images.length > 10)) {
+            return res.status(400).json({ message: 'Invalid number of images. Must be between 1 and 10.' });
         } else {
             existingProduct.images = req.body.images;
         }
