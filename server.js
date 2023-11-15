@@ -87,9 +87,9 @@ app.put('/product-update', async function (req, res) {
             existingProduct.images = req.body.images;
         }
         
-        existingProduct.title = req.body.title || existingProduct.title;
-        existingProduct.sn = req.body.sn || existingProduct.sn;
-        existingProduct.category = req.body.category || existingProduct.category;
+        existingProduct.title = req.body.title;
+        existingProduct.sn = req.body.sn;
+        existingProduct.category = req.body.category;
         existingProduct.subCategory = req.body.subCategory;
         existingProduct.descriptionHead1 = req.body.descriptionHead1;
         existingProduct.description = req.body.description;
@@ -115,7 +115,7 @@ app.put('/product-update', async function (req, res) {
         existingProduct.note1 = req.body.note1;
         existingProduct.note2 = req.body.note2;
         existingProduct.price = req.body.price || existingProduct.price;
-        existingProduct.discount = req.body.discount || existingProduct.discount;
+        existingProduct.discount = req.body.discount;
         existingProduct.Fprice = req.body.Fprice || existingProduct.Fprice;
 
         await existingProduct.save();
