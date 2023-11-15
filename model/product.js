@@ -20,7 +20,6 @@
         feature5:String,
         feature6:String,
         feature7:String,
-        note1:String,
         note2:String,
         dimensionHead:String,
         dimension1:String,

@@ -112,7 +112,6 @@ app.put('/product-update', async function (req, res) {
         existingProduct.dimension2 = req.body.dimension2;
         existingProduct.dimension3 = req.body.dimension3;
         existingProduct.dimension4 = req.body.dimension4;
-        existingProduct.note1 = req.body.note1;
         existingProduct.note2 = req.body.note2;
         existingProduct.price = req.body.price || existingProduct.price;
         existingProduct.discount = req.body.discount;
