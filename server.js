@@ -344,7 +344,6 @@ app.post('/Order', async (req, res) => {
             userId: req.body.userId,
             orderId: req.body.orderId,
             number1: req.body.number1,
-            number2: req.body.number2,
             orderItems: orderItems,
             email: req.body.email,
             shipping: req.body.shipping,

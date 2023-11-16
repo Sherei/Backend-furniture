@@ -28,6 +28,7 @@ const orderSchema = new mongoose.Schema({
     orderId: String,
     country:String,
     city:String,
+    total:Number,
     postal:String,
 
     orderItems: [orderItemSchema],
