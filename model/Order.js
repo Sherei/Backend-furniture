@@ -7,12 +7,12 @@ const orderItemSchema = new mongoose.Schema({
     subCategory: String,
     size:String,
     color:String,
-    mattress:String,
+    fabric:String,
     detail:String,
     base:String,
-    fabric:String,
     headboard:String,
     ottoman:String,
+    mattress:String,
     image: String,
     price: String,
     quantity: String,
@@ -23,20 +23,19 @@ const orderItemSchema = new mongoose.Schema({
 const orderSchema = new mongoose.Schema({
     name1: String,
     name2: String,
+    shipping: String,
     userId: String,
     orderId: String,
+    country:String,
+    city:String,
+    postal:String,
+
     orderItems: [orderItemSchema],
     number1: {
         type:Number,
         trim:true
     },
-    number2: {
-        type:Number,
-        trim:true
-    },
-    status: String,
     email: String,
-    shipping: String,
     payment: String,
     date: {
         type: Date,
