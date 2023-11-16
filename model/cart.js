@@ -12,6 +12,7 @@ const cartSchema = mongoose.Schema({
     base:String,
     headboard:String,
     ottoman:String,
+    total:Number,
     mattress:String,
     quantity: Number,
     price: Number,
