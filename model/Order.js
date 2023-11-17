@@ -15,9 +15,9 @@ const orderItemSchema = new mongoose.Schema({
     mattress:String,
     image: String,
     price: String,
+    total:Number,
     quantity: String,
     discount: Number,
-    Fprice: String,
 });
 
 const orderSchema = new mongoose.Schema({
@@ -30,7 +30,6 @@ const orderSchema = new mongoose.Schema({
     city:String,
     total:Number,
     postal:String,
-
     orderItems: [orderItemSchema],
     number1: {
         type:Number,

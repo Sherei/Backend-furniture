@@ -306,7 +306,7 @@ app.put("/updateCart", async function (req, res) {
                 { _id: item._id },
                 {
                     quantity: item.quantity,
-                    Fprice: item.Fprice,
+                    total: item.total,
                 }
             );
         }
