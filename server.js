@@ -347,6 +347,7 @@ app.post('/Order', async (req, res) => {
             number1: req.body.number1,
             orderItems: orderItems,
             email: req.body.email,
+            note: req.body.note,
             shipping: req.body.shipping,
             payment: req.body.payment,
         });
