@@ -341,15 +341,15 @@ app.post('/Order', async (req, res) => {
         const newOrder = new Orders({
             name1: req.body.name1,
             name2: req.body.name2,
+            street:req.body.street,
             userId: req.body.userId,
             total:req.body.total,
             orderId: req.body.orderId,
             number1: req.body.number1,
-            orderItems: orderItems,
-            email: req.body.email,
             note: req.body.note,
-            shipping: req.body.shipping,
-            payment: req.body.payment,
+            orderItems: orderItems,
+            appartment:req.body.appartment,
+            email: req.body.email,
         });
 
         await newOrder.save();

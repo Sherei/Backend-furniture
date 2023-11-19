@@ -28,17 +28,17 @@ const orderSchema = new mongoose.Schema({
     orderItems: [orderItemSchema],
     name1: String,
     name2: String,
-    shipping: String,
     email: String,
     country:String,
     city:String,
+    street:String,
+    appartment:String,
     postal:String,
     note:String,
     number1: {
         type:Number,
         trim:true
     },
-    payment: String,
     date: {
         type: Date,
         default: Date.now,
