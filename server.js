@@ -335,9 +335,7 @@ app.delete('/deleteCart', async function (req, res) {
 app.post('/Order', async (req, res) => {
 
     try {
-
         const orderItems = JSON.parse(req.body.orderItems);
-
         const newOrder = new Orders({
             name1: req.body.name1,
             name2: req.body.name2,
