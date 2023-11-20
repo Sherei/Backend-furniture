@@ -340,13 +340,13 @@ app.post('/Order', async (req, res) => {
             name1: req.body.name1,
             name2: req.body.name2,
             street:req.body.street,
+            appartment:req.body.appartment,
             userId: req.body.userId,
             total:req.body.total,
             orderId: req.body.orderId,
             number1: req.body.number1,
             note: req.body.note,
             orderItems: orderItems,
-            appartment:req.body.appartment,
             email: req.body.email,
         });
 
