@@ -22,23 +22,23 @@ const orderItemSchema = new mongoose.Schema({
 });
 
 const orderSchema = new mongoose.Schema({
-    orderId: String,
-    total:Number,
     userId: String,
+    orderId: String,
     orderItems: [orderItemSchema],
+    total:Number,
     name1: String,
     name2: String,
-    email: String,
-    country:String,
-    city:String,
-    street:String,
-    appartment:String,
-    postal:String,
-    note:String,
     number1: {
         type:Number,
         trim:true
     },
+    street:String,
+    appartment:String,
+    country:String,
+    city:String,
+    postal:String,
+    email: String,
+    note:String,
     date: {
         type: Date,
         default: Date.now,

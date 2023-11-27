@@ -337,17 +337,20 @@ app.post('/Order', async (req, res) => {
     try {
         const orderItems = JSON.parse(req.body.orderItems);
         const newOrder = new Orders({
+            userId: req.body.userId,
+            orderId: req.body.orderId,  
+            orderItems: orderItems,
+            total:req.body.total,
             name1: req.body.name1,
             name2: req.body.name2,
+            number1: req.body.number1,
             street:req.body.street,
             appartment:req.body.appartment,
-            userId: req.body.userId,
-            total:req.body.total,
-            orderId: req.body.orderId,
-            number1: req.body.number1,
-            note: req.body.note,
-            orderItems: orderItems,
+            country:req.body.country,
+            city:req.body.city,
+            postal:req.body.postal,
             email: req.body.email,
+            note: req.body.note,
         });
 
         await newOrder.save();
