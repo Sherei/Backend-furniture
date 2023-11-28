@@ -86,7 +86,7 @@ app.put('/product-update', async function (req, res) {
         } else {
             existingProduct.images = req.body.images;
         }
-        
+
         existingProduct.title = req.body.title;
         existingProduct.sn = req.body.sn;
         existingProduct.category = req.body.category;
@@ -130,13 +130,16 @@ app.put('/product-update', async function (req, res) {
 
 
 app.post('/session-check', async (req, res) => {
+    try {
+        token.verify(req.body.token, "My user", async function (err, dataObj) {
+            if (dataObj) {
+                const user = await SignupUsers.findById(dataObj.tokenId)
+                res.json(user)
+            }
+        })
+    } catch (e) {
 
-    token.verify(req.body.token, "My user", async function (err, dataObj) {
-        if (dataObj) {
-            const user = await SignupUsers.findById(dataObj.tokenId)
-            res.json(user)
-        }
-    })
+    }
 
 })
 
@@ -168,9 +171,6 @@ app.post('/signUp', async (req, res) => {
     }
 });
 
-
-
-
 app.post('/login', async (req, res) => {
     try {
         const user = await SignupUsers.findOne({ email: req.body.email });
@@ -193,7 +193,6 @@ app.post('/login', async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
-
 
 app.get('/Users', async (req, res) => {
 
@@ -222,7 +221,6 @@ app.delete('/deleteUser', async function (req, res) {
 
 })
 
-
 app.get('/product', async (req, res) => {
 
     try {
@@ -233,8 +231,6 @@ app.get('/product', async (req, res) => {
 
     }
 })
-
-
 
 app.get('/singleProduct', async (req, res) => {
 
@@ -247,7 +243,6 @@ app.get('/singleProduct', async (req, res) => {
         res.end(e)
     }
 })
-
 
 app.delete('/deleteProduct', async function (req, res) {
 
@@ -264,18 +259,9 @@ app.delete('/deleteProduct', async function (req, res) {
 
 })
 
-
 app.post("/addToCart", async function (req, res) {
 
     try {
-        console.log(req.body)
-        const existingProduct = await Cart.findOne({ productId: req.body.productId, userId: req.body.userId });
-
-        if (existingProduct) {
-
-            return res.status(400).send("Product is already into Cart");
-        }
-
         const newCart = new Cart(req.body);
 
         await newCart.save();
@@ -330,25 +316,23 @@ app.delete('/deleteCart', async function (req, res) {
 
 })
 
-
-
 app.post('/Order', async (req, res) => {
 
     try {
         const orderItems = JSON.parse(req.body.orderItems);
         const newOrder = new Orders({
             userId: req.body.userId,
-            orderId: req.body.orderId,  
+            orderId: req.body.orderId,
             orderItems: orderItems,
-            total:req.body.total,
+            total: req.body.total,
             name1: req.body.name1,
             name2: req.body.name2,
             number1: req.body.number1,
-            street:req.body.street,
-            appartment:req.body.appartment,
-            country:req.body.country,
-            city:req.body.city,
-            postal:req.body.postal,
+            street: req.body.street,
+            appartment: req.body.appartment,
+            country: req.body.country,
+            city: req.body.city,
+            postal: req.body.postal,
             email: req.body.email,
             note: req.body.note,
         });
@@ -366,7 +350,6 @@ app.post('/Order', async (req, res) => {
     }
 });
 
-
 app.get('/order', async (req, res) => {
     try {
 
@@ -378,7 +361,6 @@ app.get('/order', async (req, res) => {
         res.status(500).send('Error fetching orders');
     }
 });
-
 
 app.get('/orderDetail', async (req, res) => {
 
@@ -460,7 +442,6 @@ app.delete('/deleteComment', async function (req, res) {
 
 
 })
-
 
 app.get("/dashboard", async function (req, res) {
     try {
