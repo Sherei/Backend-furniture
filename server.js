@@ -262,6 +262,15 @@ app.delete('/deleteProduct', async function (req, res) {
 app.post("/addToCart", async function (req, res) {
 
     try {
+        
+        // console.log(req.body)
+        // const existingProduct = await Cart.findOne({ productId: req.body.productId, userId: req.body.userId });
+
+        // if (existingProduct) {
+
+        //     return res.status(400).send("Product is already into Cart");
+        // }
+
         const newCart = new Cart(req.body);
 
         await newCart.save();
