@@ -262,6 +262,11 @@ app.delete('/deleteProduct', async function (req, res) {
 app.post("/addToCart", async function (req, res) {
 
     try {
+        const newCart = new Cart(req.body);
+
+        await newCart.save();
+        
+        res.send("Product Added");
         
         // console.log(req.body)
         // const existingProduct = await Cart.findOne({ productId: req.body.productId, userId: req.body.userId });
@@ -271,14 +276,7 @@ app.post("/addToCart", async function (req, res) {
         //     return res.status(400).send("Product is already into Cart");
         // }
 
-        const newCart = new Cart(req.body);
-
-        await newCart.save();
-
-        res.send("Product Added");
-
     } catch (e) {
-        console.log(e);
         res.status(500).send("Internal Server Error");
     }
 })
