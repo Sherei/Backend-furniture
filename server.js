@@ -347,12 +347,8 @@ app.post('/Order', async (req, res) => {
         });
 
         await newOrder.save();
-
         res.send('Order is Placed');
-
         await Cart.deleteMany({ userId: req.body.userId });
-
-
     } catch (e) {
         console.error(e);
         res.status(500).send('Error placing the order');
