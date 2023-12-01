@@ -342,6 +342,7 @@ app.post('/Order', async (req, res) => {
             city: req.body.city,
             postal: req.body.postal,
             email: req.body.email,
+            shipping:req.body.shipping,
             note: req.body.note,
         });
 

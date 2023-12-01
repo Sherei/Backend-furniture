@@ -38,6 +38,7 @@ const orderSchema = new mongoose.Schema({
     city:String,
     postal:String,
     email: String,
+    shipping:Number,
     note:String,
     date: {
         type: Date,
