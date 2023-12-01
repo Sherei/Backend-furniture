@@ -38,11 +38,9 @@ app.post('/product', async (req, res) => {
     try {
 
         const existingProduct = await Product.findOne({ sn: req.body.sn });
-
         if (existingProduct) {
             return res.status(400).send('Try with a different Serial Number');
         }
-
         const newProduct = new Product(req.body);
 
         await newProduct.save();
@@ -126,8 +124,6 @@ app.put('/product-update', async function (req, res) {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
-
-
 
 app.post('/session-check', async (req, res) => {
     try {
@@ -224,7 +220,7 @@ app.delete('/deleteUser', async function (req, res) {
 app.get('/product', async (req, res) => {
 
     try {
-        const newProduct = await Product.find().sort({ _id: -1 })
+        const newProduct = await Product.find()
         res.json(newProduct)
     } catch (e) {
         console.log(e)
@@ -235,7 +231,6 @@ app.get('/product', async (req, res) => {
 app.get('/singleProduct', async (req, res) => {
 
     try {
-
         const singleProduct = await Product.findById(req.query.id)
         res.json(singleProduct)
 
