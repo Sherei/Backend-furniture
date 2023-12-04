@@ -218,15 +218,15 @@ app.delete('/deleteUser', async function (req, res) {
 })
 
 app.get('/product', async (req, res) => {
-
     try {
-        const newProduct = await Product.find()
-        res.json(newProduct)
+        const newProduct = await Product.find().sort({ _id: -1 });
+        res.json(newProduct);
     } catch (e) {
-        console.log(e)
-
+        console.error(e);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-})
+});
+
 
 app.get('/singleProduct', async (req, res) => {
 
