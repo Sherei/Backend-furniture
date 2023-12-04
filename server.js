@@ -360,7 +360,6 @@ app.put("/updateStatus", async (req, res) => {
   try {
     const orderId = req.body.id;
     const newStatus = req.body.status;
-
     const updatedOrder = await Orders.findByIdAndUpdate(
       orderId,
       { status: newStatus },
