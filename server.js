@@ -31,6 +31,76 @@ const Orders = require("./model/Order");
 
 const token = require("jsonwebtoken");
 
+app.post("/signUp", async (req, res) => {
+  console.log("signup data is ::", req.body)
+  try {
+    const existingUser = await SignupUsers.findOne({ email: req.body.email });
+
+    if (existingUser) {
+      return res.status(400).send("User with this email already exists");
+    }
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    // const hashedCPassword = await bcrypt.hash(req.body.cpassword, 10);
+
+    const newUser = new SignupUsers({
+      ...req.body,
+      password: hashedPassword,
+      // cpassword: hashedCPassword,
+    });
+
+    await newUser.save();
+    
+    res.send("User Created");
+  } catch (e) {
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.post("/login", async (req, res) => {
+  try {
+
+    const user = await SignupUsers.findOne({ email: req.body.email });
+
+    if (!user) {
+      return res.status(404).send("Invalid Credentials");
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+
+    if (isPasswordValid) {
+      token.sign(
+        { tokenId: user._id },
+        "My user",
+        { expiresIn: "1y" },
+        async (err, myToken) => {
+          res.json({ user, myToken });
+        }
+      );
+    } else {
+      res.status(404).send("Invalid Credentials");
+    }
+  } catch (e) {
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+app.post("/session-check", async (req, res) => {
+  try {
+    token.verify(req.body.token, "My user", async function (err, dataObj) {
+      if (dataObj) {
+        const user = await SignupUsers.findById(dataObj.tokenId);
+        res.json(user);
+      }
+    });
+  } catch (e) {}
+});
+
+
 app.post("/product", async (req, res) => {
   try {
     const existingProduct = await Product.findOne({ sn: req.body.sn });
@@ -118,71 +188,7 @@ app.put("/product-update", async function (req, res) {
   }
 });
 
-app.post("/session-check", async (req, res) => {
-  try {
-    token.verify(req.body.token, "My user", async function (err, dataObj) {
-      if (dataObj) {
-        const user = await SignupUsers.findById(dataObj.tokenId);
-        res.json(user);
-      }
-    });
-  } catch (e) {}
-});
 
-app.post("/signUp", async (req, res) => {
-  try {
-    const existingUser = await SignupUsers.findOne({ email: req.body.email });
-
-    if (existingUser) {
-      return res.status(400).send("User with this email already exists");
-    }
-
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const hashedCPassword = await bcrypt.hash(req.body.cpassword, 10);
-
-    const newUser = new SignupUsers({
-      ...req.body,
-      password: hashedPassword,
-      cpassword: hashedCPassword,
-    });
-
-    await newUser.save();
-
-    res.send("User Created");
-  } catch (e) {
-    res.status(500).send("Internal Server Error");
-  }
-});
-
-app.post("/login", async (req, res) => {
-  try {
-    const user = await SignupUsers.findOne({ email: req.body.email });
-
-    if (!user) {
-      return res.status(404).send("Invalid Credentials");
-    }
-
-    const isPasswordValid = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
-
-    if (isPasswordValid) {
-      token.sign(
-        { tokenId: user._id },
-        "My user",
-        { expiresIn: "1y" },
-        async (err, myToken) => {
-          res.json({ user, myToken });
-        }
-      );
-    } else {
-      res.status(404).send("Invalid Credentials");
-    }
-  } catch (e) {
-    res.status(500).send("Internal Server Error");
-  }
-});
 
 app.get("/Users", async (req, res) => {
   try {
@@ -236,26 +242,11 @@ app.delete("/deleteProduct", async function (req, res) {
 
 app.post("/addToCart", async function (req, res) {
   try {
-    // const existingProduct = await Cart.findOne({
-    //   productId: req.body.productId,
-    //   userId: req.body.userId,
-    // });
-
-    // if (existingProduct) {
-    //   await Cart.updateOne(
-    //     { _id: existingProduct._id },
-    //     {
-    //       quantity: existingProduct.quantity + Number(req.body.quantity),
-    //       total: existingProduct.total + Number(req.body.total),
-    //     }
-    //   );
-    // } else {
+    
     let ob = { ...req.body };
     delete ob._id;
+
     const newCart = await Cart.create(ob);
-
-    // }
-
     const allItems = await Cart.find();
 
     res.send({ message: "Product Added", alldata: allItems });
