@@ -32,7 +32,8 @@ const Orders = require("./model/Order");
 const token = require("jsonwebtoken");
 
 app.post("/signUp", async (req, res) => {
-  console.log("signup data is ::", req.body)
+
+
   try {
     const existingUser = await SignupUsers.findOne({ email: req.body.email });
 
@@ -41,7 +42,6 @@ app.post("/signUp", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    // const hashedCPassword = await bcrypt.hash(req.body.cpassword, 10);
 
     const newUser = new SignupUsers({
       ...req.body,
