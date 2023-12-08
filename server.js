@@ -46,12 +46,12 @@ app.post("/signUp", async (req, res) => {
     const newUser = new SignupUsers({
       ...req.body,
       password: hashedPassword,
-      // cpassword: hashedCPassword,
     });
 
     await newUser.save();
     
     res.send("User Created");
+
   } catch (e) {
     res.status(500).send("Internal Server Error");
   }
@@ -59,7 +59,7 @@ app.post("/signUp", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   try {
-
+    
     const user = await SignupUsers.findOne({ email: req.body.email });
 
     if (!user) {
