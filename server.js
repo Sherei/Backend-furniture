@@ -49,7 +49,7 @@ app.post("/signUp", async (req, res) => {
     });
 
     await newUser.save();
-    
+
     res.send("User Created");
 
   } catch (e) {
@@ -59,7 +59,7 @@ app.post("/signUp", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   try {
-    
+
     const user = await SignupUsers.findOne({ email: req.body.email });
 
     if (!user) {
@@ -97,7 +97,7 @@ app.post("/session-check", async (req, res) => {
         res.json(user);
       }
     });
-  } catch (e) {}
+  } catch (e) { }
 });
 
 
@@ -242,7 +242,6 @@ app.delete("/deleteProduct", async function (req, res) {
 
 app.post("/addToCart", async function (req, res) {
   try {
-    
     let ob = { ...req.body };
     delete ob._id;
 
@@ -250,7 +249,7 @@ app.post("/addToCart", async function (req, res) {
     const allItems = await Cart.find();
 
     res.send({ message: "Product Added", alldata: allItems });
-} catch (e) {
+  } catch (e) {
     console.log(e);
   }
 });
@@ -380,13 +379,17 @@ app.delete("/deleteOrder", async function (req, res) {
 
 app.post("/comments", async (req, res) => {
   try {
-    const newComment = new Comment(req.body);
-    await newComment.save();
-    res.send("Comment Added");
+    
+    let ob = { ...req.body };
+    delete ob._id;
+    const newComment = await Comment.create(ob);
+    const allComments = await Comment.find();
+    res.send({ message: "Feedback submitted", alldata: allComments });
+
   } catch (e) {
-    console.error(e);
-    res.status(500).send("Internal Server Error");
+    console.log(e);
   }
+
 });
 
 app.get("/comments", async (req, res) => {
@@ -402,11 +405,21 @@ app.get("/comments", async (req, res) => {
 app.delete("/deleteComment", async function (req, res) {
   try {
     await Comment.findByIdAndDelete(req.query.id);
-
-    res.end("Delete ho gya");
+    let allItems = await Comment.find();
+    res.send({
+      message: "success",
+      alldata: allItems,
+    });
   } catch (e) {
     res.send(e);
   }
+  // try {
+  //   await Comment.findByIdAndDelete(req.query.id);
+
+  //   res.end("Delete ho gya");
+  // } catch (e) {
+  //   res.send(e);
+  // }
 });
 
 app.get("/dashboard", async function (req, res) {
