@@ -138,6 +138,58 @@ app.post("/product", async (req, res) => {
   }
 });
 
+app.get("/products", async (req, res) => {
+  try {
+    const { name, category, sort, minPrice, maxPrice, search } = req.query;
+    let query = {};
+    let sortQuery = {};
+    if (name === "all") {
+      query = {};
+    } else {
+      query = {
+        $or: [
+          { category: name },
+          { subCategory: name }
+        ]
+      };
+    }
+
+    if (category) {
+      query.category = category;
+    }
+
+    if (minPrice && maxPrice) {
+      query.price = { $gte: minPrice, $lte: maxPrice };
+    }
+
+    if (search) {
+      query.$or = [
+        { category: new RegExp(search, 'i') },
+        { subCategory: new RegExp(search, 'i') },
+        { title: new RegExp(search, 'i') }
+      ];
+    }
+    if (sort) {
+      switch (sort) {
+        case "asc":
+          sortQuery = { Fprice: 1 };
+          break;
+        case "desc":
+          sortQuery = { Fprice: -1 };
+          break;
+        default:
+          break;
+      }
+    }
+    const newProduct = await Product.find(query).sort({ ...sortQuery, _id: -1 }).exec();
+    res.json(newProduct);
+  
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.get("/product", async (req, res) => {
   try {
     const newProduct = await Product.find().sort({ _id: -1 });
@@ -354,7 +406,7 @@ app.put("/updateStatus", async (req, res) => {
       return res.status(404).send("Order not found");
     }
     res.json(updatedOrder);
-  
+
   } catch (e) {
     res.status(500).send("Error updating order status");
   }
