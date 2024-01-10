@@ -32,6 +32,8 @@ const Cart = require("./model/cart");
 
 const Orders = require("./model/Order");
 
+const Blog = require("./model/blog");
+
 const token = require("jsonwebtoken");
 
 // User data
@@ -464,6 +466,85 @@ app.delete("/deleteComment", async function (req, res) {
   }
 });
 
+
+//Blog data
+
+app.post("/blog", async (req, res) => {
+  try {
+    const newBlog = new Blog(req.body);
+    await newBlog.save();
+    res.send({ message: "Blog Added" });
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/blog", async (req, res) => {
+  try {
+    const newBlog = await Blog.find().sort({ _id: -1 });
+    res.json(newBlog);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/singleBlog", async (req, res) => {
+  try {
+    const singleBlog = await Blog.findById(req.query.id);
+    res.json(singleBlog);
+  } catch (e) {
+    res.end(e);
+  }
+});
+
+app.delete("/deleteBlog", async function (req, res) {
+  try {
+    await Blog.findByIdAndDelete(req.query.id);
+    res.end("Delete ho gya");
+  } catch (e) {
+    res.send(e);
+  }
+});
+app.get("/blog_edit", async function (req, res) {
+  try {
+    const blog = await Blog.findById(req.query.id);
+    res.json(blog);
+  } catch (e) {
+    res.status(500).json(e);
+  }
+});
+
+app.put("/blog_update", async function (req, res) {
+  try {
+    const blogId = req.body._id;
+
+    const existingBlog = await Blog.findById(blogId);
+
+    if (!existingBlog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+    existingBlog.title = req.body.title;
+    existingBlog.author = req.body.author;
+    existingBlog.issueDate = req.body.issueDate;
+    existingBlog.image = req.body.image;
+    existingBlog.description1 = req.body.description1;
+    existingBlog.description2 = req.body.description2;
+    existingBlog.description3 = req.body.description3;
+    existingBlog.description4 = req.body.description4;
+    existingBlog.description5 = req.body.description5;
+    existingBlog.description6 = req.body.description6;
+    
+    await existingBlog.save();
+    res.json({ message: "Blog Updated" });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
 // Admin Data 
 
 app.get("/dashboard", async function (req, res) {
@@ -472,7 +553,8 @@ app.get("/dashboard", async function (req, res) {
     const Products = await Product.find();
     const comments = await Comment.find();
     const allOrder = await Orders.find();
-    res.json({ Users, Products, comments, allOrder });
+    const allBlog = await Blog.find();
+    res.json({ Users, Products, comments, allOrder, allBlog });
   } catch (e) {
     res.send(e);
   }
@@ -547,3 +629,28 @@ app.get("/Adminproduct", async (req, res) => {
   }
 });
 
+app.get('/AdminBlog', async (req, res) => {
+  try {
+    const { search } = req.query;
+    let query = {};
+    if (search) {
+      const searchRegex = new RegExp(search, 'i');
+      query = {
+        $or: [
+          { title: { $regex: searchRegex } },
+          { author: { $regex: searchRegex } },
+          { description1: { $regex: searchRegex } },
+          { description2: { $regex: searchRegex } },
+          { description3: { $regex: searchRegex } },
+          { description4: { $regex: searchRegex } },
+          { description5: { $regex: searchRegex } },
+          { description6: { $regex: searchRegex } },
+        ],
+      };
+    }
+    const newBlog = await Blog.find(query).sort({ _id: -1 });
+    res.json(newBlog);
+  } catch (e) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
