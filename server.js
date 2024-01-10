@@ -503,9 +503,7 @@ app.get('/AdminUsers', async (req, res) => {
 app.get("/Admincomments", async (req, res) => {
   try {
     const { search } = req.query;
-
     let query = {};
-
     if (search) {
       const searchRegex = new RegExp(search, "i");
       query = {
@@ -519,6 +517,7 @@ app.get("/Admincomments", async (req, res) => {
 
     const comments = await Comment.find(query).sort({ _id: -1 });
     res.json(comments);
+    
   } catch (error) {
     console.error("Error fetching comments", error);
     res.status(500).json({ error: "Internal Server Error" });
