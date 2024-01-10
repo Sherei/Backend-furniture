@@ -38,24 +38,23 @@ const token = require("jsonwebtoken");
 
 app.post("/signUp", async (req, res) => {
   try {
+
     const existingUser = await SignupUsers.findOne({ email: req.body.email });
 
     if (existingUser) {
       return res.status(400).send("User with this email already exists");
+    } else {
+      console.log(req.body)
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      
+      const newUser = new SignupUsers({
+        ...req.body,
+        password: hashedPassword,
+      });
+
+      await newUser.save();
+      res.send("User Created");
     }
-
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const hashedCPassword = await bcrypt.hash(req.body.cpassword, 10);
-
-    const newUser = new SignupUsers({
-      ...req.body,
-      password: hashedPassword,
-      cpassword: hashedCPassword,
-    });
-
-    await newUser.save();
-
-    res.send("User Created");
   } catch (e) {
     res.status(500).send("Internal Server Error");
   }
@@ -68,7 +67,6 @@ app.post("/login", async (req, res) => {
     if (!user) {
       return res.status(404).send("Invalid Credentials");
     }
-
     const isPasswordValid = await bcrypt.compare(
       req.body.password,
       user.password
@@ -185,7 +183,7 @@ app.get("/products", async (req, res) => {
     }
     const newProduct = await Product.find(query).sort({ ...sortQuery, _id: -1 }).exec();
     res.json(newProduct);
-  
+
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: "Internal Server Error" });
@@ -517,7 +515,7 @@ app.get("/Admincomments", async (req, res) => {
 
     const comments = await Comment.find(query).sort({ _id: -1 });
     res.json(comments);
-    
+
   } catch (error) {
     console.error("Error fetching comments", error);
     res.status(500).json({ error: "Internal Server Error" });
