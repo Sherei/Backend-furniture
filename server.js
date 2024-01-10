@@ -34,6 +34,7 @@ const Orders = require("./model/Order");
 
 const token = require("jsonwebtoken");
 
+// User data
 
 app.post("/signUp", async (req, res) => {
   try {
@@ -120,6 +121,7 @@ app.delete("/deleteUser", async function (req, res) {
   }
 });
 
+// Products data
 
 app.post("/product", async (req, res) => {
   try {
@@ -221,6 +223,8 @@ app.delete("/deleteProduct", async function (req, res) {
   }
 });
 
+// Find Update Product
+
 app.get("/product_edit", async function (req, res) {
   try {
     let product = await Product.findById(req.query.id);
@@ -229,6 +233,8 @@ app.get("/product_edit", async function (req, res) {
     res.status(500).json(e);
   }
 });
+
+// Update Product
 
 app.put("/product-update", async function (req, res) {
   try {
@@ -289,6 +295,8 @@ app.put("/product-update", async function (req, res) {
   }
 });
 
+// Cart data
+
 app.post("/addToCart", async function (req, res) {
   try {
     let ob = { ...req.body };
@@ -343,6 +351,8 @@ app.delete("/deleteCart", async function (req, res) {
   }
 });
 
+// Order data
+
 app.post("/Order", async (req, res) => {
   try {
     const orderItems = JSON.parse(req.body.orderItems);
@@ -392,6 +402,8 @@ app.get("/orderDetail", async (req, res) => {
   }
 });
 
+// Update Order Status pending or delivered
+
 app.put("/updateStatus", async (req, res) => {
   try {
     const orderId = req.body.id;
@@ -420,6 +432,8 @@ app.delete("/deleteOrder", async function (req, res) {
     res.send(e);
   }
 });
+
+// Comments data
 
 app.post("/comments", async (req, res) => {
   try {
@@ -452,6 +466,8 @@ app.delete("/deleteComment", async function (req, res) {
   }
 });
 
+// Admin Data 
+
 app.get("/dashboard", async function (req, res) {
   try {
     const Users = await SignupUsers.find();
@@ -463,3 +479,74 @@ app.get("/dashboard", async function (req, res) {
     res.send(e);
   }
 });
+
+app.get('/AdminUsers', async (req, res) => {
+  try {
+    const { search } = req.query;
+    let query = {};
+    if (search) {
+      const searchRegex = new RegExp(search, 'i');
+      query = {
+        $or: [
+          { name: { $regex: searchRegex } },
+          { email: { $regex: searchRegex } },
+        ],
+      };
+    }
+    const newUser = await SignupUsers.find(query).sort({ _id: -1 });
+    res.json(newUser);
+  } catch (e) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get("/Admincomments", async (req, res) => {
+  try {
+    const { search } = req.query;
+
+    let query = {};
+
+    if (search) {
+      const searchRegex = new RegExp(search, "i");
+      query = {
+        $or: [
+          { name: { $regex: searchRegex } },
+          { email: { $regex: searchRegex } },
+          { comment: { $regex: searchRegex } },
+        ],
+      };
+    }
+
+    const comments = await Comment.find(query).sort({ _id: -1 });
+    res.json(comments);
+  } catch (error) {
+    console.error("Error fetching comments", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/Adminproduct", async (req, res) => {
+  try {
+    const { search } = req.query;
+
+    let query = {};
+
+    if (search) {
+      const searchRegex = new RegExp(search, "i");
+      query = {
+        $or: [
+          { title: { $regex: searchRegex } },
+          { category: { $regex: searchRegex } },
+          { subCategory: { $regex: searchRegex } },
+        ],
+      };
+    }
+
+    const newProduct = await Product.find(query).sort({ _id: -1 });
+    res.json(newProduct);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
