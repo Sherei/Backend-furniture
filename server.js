@@ -46,7 +46,7 @@ app.post("/signUp", async (req, res) => {
     if (existingUser) {
       return res.status(400).send("User with this email already exists");
     } else {
-      console.log(req.body)
+      // console.log(req.body)
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       
       const newUser = new SignupUsers({
