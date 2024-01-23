@@ -121,7 +121,9 @@ app.delete("/deleteUser", async function (req, res) {
   }
 });
 
+
 // Products data
+
 
 app.post("/product", async (req, res) => {
   try {
