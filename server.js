@@ -625,6 +625,7 @@ app.get("/Adminproduct", async (req, res) => {
           { title: { $regex: searchRegex } },
           { category: { $regex: searchRegex } },
           { subCategory: { $regex: searchRegex } },
+          { sn: Number(search)}
         ],
       };
     }
