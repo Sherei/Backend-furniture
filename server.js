@@ -157,9 +157,8 @@ app.get("/products", async (req, res) => {
         ]
       };
     }
-
     if (category) {
-      query.category = category;
+       query.category = category;
     }
 
     if (minPrice && maxPrice) {
