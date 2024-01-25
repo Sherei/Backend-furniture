@@ -48,7 +48,7 @@ app.post("/signUp", async (req, res) => {
     } else {
       // console.log(req.body)
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      
+
       const newUser = new SignupUsers({
         ...req.body,
         password: hashedPassword,
@@ -242,7 +242,6 @@ app.put("/product-update", async function (req, res) {
   try {
     const productId = req.body._id;
     const existingProduct = await Product.findById(productId);
-
     if (!existingProduct) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -283,6 +282,7 @@ app.put("/product-update", async function (req, res) {
     existingProduct.dimension2 = req.body.dimension2;
     existingProduct.dimension3 = req.body.dimension3;
     existingProduct.dimension4 = req.body.dimension4;
+    existingProduct.home = req.body.home;
     existingProduct.note2 = req.body.note2;
     existingProduct.price = req.body.price || existingProduct.price;
     existingProduct.discount = req.body.discount;
@@ -625,7 +625,7 @@ app.get("/Adminproduct", async (req, res) => {
           { title: { $regex: searchRegex } },
           { category: { $regex: searchRegex } },
           { subCategory: { $regex: searchRegex } },
-          { sn: Number(search)}
+          { sn: Number(search) }
         ],
       };
     }

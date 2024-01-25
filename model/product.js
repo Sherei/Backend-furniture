@@ -28,6 +28,7 @@
         dimension4:String,
         category: String,
         subCategory:String,
+        home:Boolean,
         sn: {
             type: Number,
             trim: true,
