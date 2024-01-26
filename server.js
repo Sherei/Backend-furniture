@@ -144,25 +144,28 @@ app.post("/product", async (req, res) => {
 
 app.get("/products", async (req, res) => {
   try {
-    const { name, category, sort, minPrice, maxPrice, search } = req.query;
+    const { name, sort, minPrice, maxPrice, search } = req.query;
     let query = {};
     let sortQuery = {};
+
     if (name === "all") {
       query = {};
     } else {
+
       query = {
         $or: [
-          { category: name },
-          { subCategory: name }
+          { category: new RegExp(name, 'i') },
+          { subCategory: new RegExp(name, 'i') }
         ]
       };
     }
-    if (category) {
-       query.category = category;
-    }
 
-    if (minPrice && maxPrice) {
-      query.price = { $gte: minPrice, $lte: maxPrice };
+    // if (category) {
+    //    query.category = category;
+    // }
+
+    if (minPrice || maxPrice) {
+      query.Fprice = { $gte: minPrice, $lte: maxPrice };
     }
 
     if (search) {
@@ -172,18 +175,20 @@ app.get("/products", async (req, res) => {
         { title: new RegExp(search, 'i') }
       ];
     }
+    
     if (sort) {
       switch (sort) {
         case "asc":
-          sortQuery = { Fprice: 1 };
+          sortQuery = { Fprice: -1 };
           break;
         case "desc":
-          sortQuery = { Fprice: -1 };
+          sortQuery = { Fprice: 1 };
           break;
         default:
           break;
       }
     }
+    
     const newProduct = await Product.find(query).sort({ ...sortQuery, _id: -1 }).exec();
     res.json(newProduct);
 
