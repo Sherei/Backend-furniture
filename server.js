@@ -175,7 +175,7 @@ app.get("/products", async (req, res) => {
         { title: new RegExp(search, 'i') }
       ];
     }
-    
+
     if (sort) {
       switch (sort) {
         case "asc":
@@ -188,7 +188,7 @@ app.get("/products", async (req, res) => {
           break;
       }
     }
-    
+
     const newProduct = await Product.find(query).sort({ ...sortQuery, _id: -1 }).exec();
     res.json(newProduct);
 
@@ -288,6 +288,10 @@ app.put("/product-update", async function (req, res) {
     existingProduct.dimension4 = req.body.dimension4;
     existingProduct.home = req.body.home;
     existingProduct.note2 = req.body.note2;
+    existingProduct.double = req.body.double;
+    existingProduct.standard = req.body.standard;
+    existingProduct.king = req.body.king;
+    existingProduct.super = req.body.super;
     existingProduct.price = req.body.price || existingProduct.price;
     existingProduct.discount = req.body.discount;
     existingProduct.Fprice = req.body.Fprice || existingProduct.Fprice;

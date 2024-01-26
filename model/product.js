@@ -29,6 +29,10 @@
         category: String,
         subCategory:String,
         home:Boolean,
+        double:Number,
+        standard:Number,
+        king:Number,
+        super:Number,
         sn: {
             type: Number,
             trim: true,
