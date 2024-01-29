@@ -145,19 +145,20 @@ app.post("/product", async (req, res) => {
 app.get("/products", async (req, res) => {
   try {
     const { name, sort, minPrice, maxPrice, search } = req.query;
+    
     let query = {};
     let sortQuery = {};
 
     if (name === "all") {
       query = {};
     } else {
-
       query = {
         $or: [
-          { category: new RegExp(name, 'i') },
-          { subCategory: new RegExp(name, 'i') }
+          { category: new RegExp(`^${name}$`, 'i') },
+          { subCategory: new RegExp(`^${name}$`, 'i') }
         ]
       };
+      
     }
 
     // if (category) {
