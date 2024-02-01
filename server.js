@@ -145,7 +145,7 @@ app.post("/product", async (req, res) => {
 app.get("/products", async (req, res) => {
   try {
     const { name, sort, minPrice, maxPrice, search } = req.query;
-    
+
     let query = {};
     let sortQuery = {};
 
@@ -158,7 +158,7 @@ app.get("/products", async (req, res) => {
           { subCategory: new RegExp(`^${name}$`, 'i') }
         ]
       };
-      
+
     }
 
     // if (category) {
@@ -458,9 +458,11 @@ app.delete("/deleteOrder", async function (req, res) {
 
 app.post("/comments", async (req, res) => {
   try {
-    const newComment = new Comment(req.body);
-    await newComment.save();
-    res.send("Comment Added");
+    let ob = { ...req.body };
+    delete ob._id;
+    const newComment = await Comment.create(ob);
+    const allItems = await Comment.find();
+    res.send({ message: "Comment Added", alldata: allItems });
   } catch (e) {
     console.error(e);
     res.status(500).send("Internal Server Error");
@@ -480,7 +482,6 @@ app.get("/comments", async (req, res) => {
 app.delete("/deleteComment", async function (req, res) {
   try {
     await Comment.findByIdAndDelete(req.query.id);
-
     res.end("Delete ho gya");
   } catch (e) {
     res.send(e);
@@ -528,6 +529,7 @@ app.delete("/deleteBlog", async function (req, res) {
     res.send(e);
   }
 });
+
 app.get("/blog_edit", async function (req, res) {
   try {
     const blog = await Blog.findById(req.query.id);

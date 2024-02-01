@@ -5,6 +5,7 @@ let commentSchema = mongoose.Schema({
     email: String,
     comment: String,
     productId:String,
+    date1:Date,
     date: {
         type: Date,
         default: Date.now,
