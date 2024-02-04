@@ -551,7 +551,7 @@ app.put("/blog_update", async function (req, res) {
     existingBlog.title = req.body.title;
     existingBlog.author = req.body.author;
     existingBlog.issueDate = req.body.issueDate;
-    existingBlog.image = req.body.image;
+    existingBlog.image = req.body.image || existingBlog.image;
     existingBlog.introduction = req.body.introduction;
     existingBlog.heading1 = req.body.heading1;
     existingBlog.description1 = req.body.description1;
