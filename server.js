@@ -160,11 +160,7 @@ app.get("/products", async (req, res) => {
       };
 
     }
-
-    // if (category) {
-    //    query.category = category;
-    // }
-
+    
     if (minPrice || maxPrice) {
       query.Fprice = { $gte: minPrice, $lte: maxPrice };
     }
