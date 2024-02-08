@@ -250,7 +250,6 @@ app.put("/product-update", async function (req, res) {
     if (!existingProduct) {
       return res.status(404).json({ message: "Product not found" });
     }
-
     if (
       req.body.images &&
       (req.body.images.length < 1 || req.body.images.length > 10)
@@ -288,6 +287,7 @@ app.put("/product-update", async function (req, res) {
     existingProduct.dimension3 = req.body.dimension3;
     existingProduct.dimension4 = req.body.dimension4;
     existingProduct.home = req.body.home;
+    existingProduct.stock = req.body.stock;
     existingProduct.note2 = req.body.note2;
     existingProduct.double = req.body.double;
     existingProduct.standard = req.body.standard;

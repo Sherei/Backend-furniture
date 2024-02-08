@@ -10,6 +10,7 @@ const cartSchema = mongoose.Schema({
     fabric:String,
     detail:String,
     base:String,
+    side:String,
     headboard:String,
     ottoman:String,
     mattress:String,

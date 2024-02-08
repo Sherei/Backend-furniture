@@ -29,6 +29,7 @@
         category: String,
         subCategory:String,
         home:Boolean,
+        stock:Boolean,
         double:Number,
         standard:Number,
         king:Number,
