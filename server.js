@@ -315,6 +315,7 @@ app.put("/product-update", async function (req, res) {
 // Cart data
 
 app.post("/addToCart", async function (req, res) {
+
   try {
     let ob = { ...req.body };
     delete ob._id;
