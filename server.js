@@ -160,7 +160,7 @@ app.get("/products", async (req, res) => {
       };
 
     }
-    
+
     if (minPrice || maxPrice) {
       query.Fprice = { $gte: minPrice, $lte: maxPrice };
     }
@@ -370,6 +370,14 @@ app.delete("/deleteCart", async function (req, res) {
 });
 
 // Order data
+
+app.get("/checkout", async function (req, res) {
+  try {
+    const newCart = await Cart.find({ userId: req.query.userID });
+    res.json(newCart);
+  } catch (e) {
+  }
+});
 
 app.post("/Order", async (req, res) => {
   try {
@@ -638,21 +646,27 @@ app.get("/Adminproduct", async (req, res) => {
 
     if (search) {
       const searchRegex = new RegExp(search, "i");
-      query = {
-        $or: [
-          { title: { $regex: searchRegex } },
-          { category: { $regex: searchRegex } },
-          { subCategory: { $regex: searchRegex } },
-          // { sn: Number(search) }
-        ],
-      };
+      if (!isNaN(search)) { 
+        query = {
+          $or: [
+            { sn: Number(search) },
+          ],
+        };
+      } else {
+        query = {
+          $or: [
+            { title: { $regex: searchRegex } },
+            { category: { $regex: searchRegex } },
+            { subCategory: { $regex: searchRegex } },
+          ],
+        };
+      }
     }
-
-    const newProduct = await Product.find(query).sort({ _id: -1 });
-    res.json(newProduct);
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: "Internal Server Error" });
+    const products = await Product.find(query).sort({_id:-1});
+    res.json(products);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
