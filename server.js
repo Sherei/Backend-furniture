@@ -368,6 +368,15 @@ app.delete("/deleteCart", async function (req, res) {
 
 // Order data
 
+app.get("/checkout", async function (req, res) {
+  try {
+    const newCart = await Cart.find({ userId: req.query.userId }).sort({ _id: -1 });
+    res.json(newCart);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 app.post("/Order", async (req, res) => {
   try {
     const orderItems = JSON.parse(req.body.orderItems);
@@ -635,10 +644,13 @@ app.get("/Adminproduct", async (req, res) => {
 
     if (search) {
       const searchRegex = new RegExp(search, "i");
-      if (!isNaN(search)) { 
+      if (!isNaN(search)) {
         query = {
           $or: [
             { sn: Number(search) },
+            { title: { $regex: searchRegex } },
+            { category: { $regex: searchRegex } },
+            { subCategory: { $regex: searchRegex } },
           ],
         };
       } else {
@@ -651,7 +663,7 @@ app.get("/Adminproduct", async (req, res) => {
         };
       }
     }
-    const products = await Product.find(query).sort({_id:-1});
+    const products = await Product.find(query).sort({ _id: -1 });
     res.json(products);
   } catch (err) {
     console.error(err);
