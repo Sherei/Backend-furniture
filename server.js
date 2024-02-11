@@ -246,10 +246,7 @@ app.put("/product-update", async function (req, res) {
     if (!existingProduct) {
       return res.status(404).json({ message: "Product not found" });
     }
-    if (
-      req.body.images &&
-      (req.body.images.length < 1 || req.body.images.length > 10)
-    ) {
+    else if (req.body.images && (req.body.images.length < 1 || req.body.images.length > 10)) {
       return res.status(400).json({
         message: "Invalid number of images. Must be between 1 and 10.",
       });
@@ -370,14 +367,6 @@ app.delete("/deleteCart", async function (req, res) {
 });
 
 // Order data
-
-app.get("/checkout", async function (req, res) {
-  try {
-    const newCart = await Cart.find({ userId: req.query.userID });
-    res.json(newCart);
-  } catch (e) {
-  }
-});
 
 app.post("/Order", async (req, res) => {
   try {
