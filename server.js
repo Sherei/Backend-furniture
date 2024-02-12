@@ -197,7 +197,7 @@ app.get("/products", async (req, res) => {
 
 app.get("/product", async (req, res) => {
   try {
-    const newProduct = await Product.find();
+    const newProduct = await Product.find().sort({_id: -1});
     res.json(newProduct);
   } catch (e) {
     console.error(e);
