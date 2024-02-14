@@ -352,6 +352,20 @@ app.put("/updateCart", async function (req, res) {
   }
 });
 
+app.delete("/chkdeleteCart", async function (req, res) {
+  try {
+    await Cart.findByIdAndDelete(req.query.id);
+    let allItems = await Cart.find({ userId: req.query.userId });
+    res.send({
+      status: "success",
+      alldata: allItems,
+      message: "Item deleted successfully",
+    });
+  } catch (e) {
+    res.send(e);
+  }
+});
+
 app.delete("/deleteCart", async function (req, res) {
   try {
     await Cart.findByIdAndDelete(req.query.id);
@@ -365,7 +379,6 @@ app.delete("/deleteCart", async function (req, res) {
     res.send(e);
   }
 });
-
 // Order data
 
 app.get("/checkout", async function (req, res) {
