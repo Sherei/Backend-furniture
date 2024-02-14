@@ -379,6 +379,7 @@ app.delete("/deleteCart", async function (req, res) {
     res.send(e);
   }
 });
+
 // Order data
 
 app.get("/checkout", async function (req, res) {
