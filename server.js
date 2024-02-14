@@ -358,7 +358,7 @@ app.delete("/chkdeleteCart", async function (req, res) {
     let allItems = await Cart.find({ userId: req.query.userId });
     res.send({
       status: "success",
-      alldata: allItems,
+      allItems,
       message: "Item deleted successfully",
     });
   } catch (e) {
