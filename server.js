@@ -65,7 +65,6 @@ app.post("/signUp", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const user = await SignupUsers.findOne({ email: req.body.email });
-
     if (!user) {
       return res.status(404).send("Invalid Credentials");
     }
