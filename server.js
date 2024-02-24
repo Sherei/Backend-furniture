@@ -106,7 +106,7 @@ app.get("/Users", async (req, res) => {
     const newUser = await SignupUsers.find().sort({ _id: -1 });
     res.json(newUser);
   } catch (e) {
-    console.log(e);
+     
   }
 });
 
@@ -134,7 +134,7 @@ app.post("/product", async (req, res) => {
 
     res.send({ message: "Product Added" });
   } catch (e) {
-    console.log(e);
+     
     res.status(500).send("Internal Server Error");
   }
 });
@@ -187,7 +187,6 @@ app.get("/products", async (req, res) => {
     res.json(newProduct);
 
   } catch (e) {
-    console.error(e);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -197,7 +196,6 @@ app.get("/product", async (req, res) => {
     const newProduct = await Product.find().sort({_id: -1});
     res.json(newProduct);
   } catch (e) {
-    console.error(e);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -301,7 +299,7 @@ app.put("/product-update", async function (req, res) {
 
     res.json({ message: "Product Updated" });
   } catch (e) {
-    console.log(e);
+     
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
@@ -325,7 +323,7 @@ app.get("/addToCart", async function (req, res) {
     const newCart = await Cart.find().sort({ _id: -1 });
     res.json(newCart);
   } catch (e) {
-    console.log(e);
+     
   }
 });
 
@@ -344,7 +342,7 @@ app.put("/updateCart", async function (req, res) {
     let allItems = await Cart.find();
     res.send({ status: "success", alldata: allItems });
   } catch (e) {
-    console.log(e);
+     
     res.status(500).send("Internal Server Error");
   }
 });
@@ -384,7 +382,7 @@ app.get("/checkout", async function (req, res) {
     const newCart = await Cart.find({ userId: req.query.userId }).sort({ _id: -1 });
     res.json(newCart);
   } catch (e) {
-    console.log(e);
+     
   }
 });
 
@@ -423,7 +421,7 @@ app.get("/order", async (req, res) => {
     const newOrder = await Orders.find().sort({ _id: -1 });
     res.json(newOrder);
   } catch (e) {
-    console.log(e);
+     
     res.status(500).send("Error fetching orders");
   }
 });
@@ -511,7 +509,7 @@ app.post("/blog", async (req, res) => {
     await newBlog.save();
     res.send({ message: "Blog Added" });
   } catch (e) {
-    console.log(e);
+     
     res.status(500).send("Internal Server Error");
   }
 });
@@ -582,7 +580,7 @@ app.put("/blog_update", async function (req, res) {
     await existingBlog.save();
     res.json({ message: "Blog Updated" });
   } catch (e) {
-    console.log(e);
+     
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
